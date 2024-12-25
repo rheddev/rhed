@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Roboto_Flex } from "next/font/google";
 import "./globals.css";
 
-const robotoSans = Roboto({
-  weight: "400",
-  subsets: ["latin"]
-});
+const robotoSans = Roboto_Flex({});
 
 export const metadata: Metadata = {
   title: "Rhed",
