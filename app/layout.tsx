@@ -3,7 +3,8 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 
 const robotoSans = Roboto({
-  weight: "400"
+  weight: "400",
+  subsets: ["latin"]
 });
 
 export const metadata: Metadata = {
