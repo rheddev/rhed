@@ -22,10 +22,16 @@ const ChatPage: React.FC = () => {
     };
 
     socket.onmessage = (event) => {
-        console.log(event)
+      console.log(event)
       const message = event.data as string;
-      const regex = /:(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.*)/;
+      
+      if (message.startsWith('PING')) {
+        socket.send('PONG');
+        console.log("PONG");
+        return;
+      }
 
+      const regex = /:(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :(.*)/;
       const match = message.match(regex);
       if (match) {
         const [, user, chatMessage] = match;
@@ -42,7 +48,7 @@ const ChatPage: React.FC = () => {
     <div className="h-screen w-screen flex items-end justify-start">
       <div>
         {messages.map((msg, index) => (
-          <div key={index} className="break-words">
+          <div key={index} className="break-words text-shadow text-xl">
             <span className="font-bold text-[#a00]">{msg.user}:</span>{' '}
             <span className="text-white">{msg.chatMessage}</span>
           </div>
