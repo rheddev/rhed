@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Roboto_Flex } from "next/font/google";
 import "./globals.css";
 
-const robotoSans = Roboto_Flex({});
+const robotoSans = Roboto_Flex({
+  subsets: ["latin"]
+});
 
 export const metadata: Metadata = {
   title: "Rhed",
