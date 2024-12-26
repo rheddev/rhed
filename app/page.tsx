@@ -125,7 +125,7 @@ export default function Home() {
                 {widgets.map(widget => <DropdownMenuItem key={widget.href}><Link className="text-2xl" href={widget.href}>{widget.name}</Link></DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Link href="https://github.com/yourusername/your-repo" target="_blank" rel="noopener noreferrer">
+            <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer">
               <Button className='text-2xl' variant="ghost">GitHub</Button>
             </Link>
             <ModeToggle />
