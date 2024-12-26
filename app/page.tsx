@@ -54,7 +54,7 @@ function AppSidebar({ widgets, className }: AppSidebarProps) {
                 <CollapsibleContent>
                   <SidebarMenuSub>
                     {widgets.map((widget) => {
-                      return <SidebarMenuSubItem className='py-3' key={widget.href}>{widget.name}</SidebarMenuSubItem>
+                      return <SidebarMenuSubItem className='py-3' key={widget.href}><Link href={widget.href}>{widget.name}</Link></SidebarMenuSubItem>
                     })}
                   </SidebarMenuSub>
                 </CollapsibleContent>
