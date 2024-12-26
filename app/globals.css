@@ -40,7 +40,7 @@
   }
 }
 
-@keyframes widgets {
+@keyframes navbar {
   from {
     opacity: 0;
     transform: translateY(-20px) scale(0.8);
@@ -53,10 +53,26 @@
 
 @keyframes sidebar {
   from {
-    transform: translateX(-20px);
+    opacity: 0;
+    transform: translateY(-20px);
   }
   to {
-    transform: translateX(0);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sidebar-in {
+  from {
+    opacity: 10%;
+    transform: translateY(-1rem);
+  }
+}
+
+@keyframes sidebar-out {
+  to {
+    opacity: 10%;
+    transform: translateY(-1rem);
   }
 }
 
@@ -69,11 +85,11 @@
     animation: slide-up 0.25s ease-out forwards;
   }
 
-  .widgets-animation {
-    animation: widgets 0.1s ease-in-out forwards;
+  .navbar-dropdown-animation {
+    animation: navbar 0.1s ease-in-out forwards;
   }
 
-  .sidebar-animation {
+  .sidebar-dropdown-animation {
     animation: sidebar 0.1s ease-in-out forwards;
   }
 
@@ -90,6 +106,13 @@
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 
     --tw-gradient-to: var(--color-primary-to) var(--tw-gradient-to-position);
+  }
+
+  .sidebar[data-state="open"] {
+    animation: sidebar-in 400ms ease-out;
+  }
+  .sidebar[data-state="closed"] {
+    animation: sidebar-out 400ms ease-out;
   }
 }
 

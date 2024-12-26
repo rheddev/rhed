@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Moon, Sun, ChevronDown } from "lucide-react"
+import { Moon, Sun, ChevronDown, Menu } from "lucide-react"
 import { useTheme } from 'next-themes'
 import {
   Sidebar,
@@ -21,7 +21,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
-  SidebarTrigger
+  useSidebar
 } from "@/components/ui/sidebar"
 import { CollapsibleContent, CollapsibleTrigger, Collapsible } from '@/components/ui/collapsible'
 
@@ -36,22 +36,24 @@ interface AppSidebarProps {
 }
 
 function AppSidebar({ widgets, className }: AppSidebarProps) {
+  const { setTheme } = useTheme()
+
   return (
-    <Sidebar className={className}>
-      <SidebarHeader className='p-3'>
+    <Sidebar className={className} collapsible="offcanvas">
+      <SidebarHeader className='p-3 '>
         <Link className="text-5xl text-center" href="/">
           &lt;<span className="font-playwrite font-black text-gradient-primary from-white">Rhed</span> /&gt;
         </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu className='text-2xl space-y-3'>
+          <SidebarMenu className='text-xl space-y-3'>
             <Collapsible className='group/collapsible'>
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton><span className='text-2xl'>Widgets</span><ChevronDown /></SidebarMenuButton>
+                  <SidebarMenuButton><span className='text-xl'>Widgets</span><ChevronDown /></SidebarMenuButton>
                 </CollapsibleTrigger>
-                <CollapsibleContent className='widgets-animation'>
+                <CollapsibleContent className='sidebar-dropdown-animation'>
                   <SidebarMenuSub>
                     {widgets.map((widget) => {
                       return <SidebarMenuSubItem className='py-3' key={widget.href}><Link href={widget.href}>{widget.name}</Link></SidebarMenuSubItem>
@@ -62,9 +64,33 @@ function AppSidebar({ widgets, className }: AppSidebarProps) {
             </Collapsible>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer"><span className='text-2xl'>GitHub</span></Link>
+                <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer"><span className='text-xl'>GitHub</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <Collapsible className='group/collapsible'>
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton className='hover:scale-[105%] flex items-center justify-center' variant="outline" size="default">
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Toggle theme</span>
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent className='sidebar-dropdown-animation'>
+                  <SidebarMenuSub>
+                    <SidebarMenuSubItem onClick={() => setTheme("light")}>
+                      Light
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem onClick={() => setTheme("dark")}>
+                      Dark
+                    </SidebarMenuSubItem>
+                    <SidebarMenuSubItem onClick={() => setTheme("system")}>
+                      System
+                    </SidebarMenuSubItem>
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
@@ -87,7 +113,7 @@ function ModeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='widgets-animation' align="center">
+      <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar' align="center">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
@@ -104,6 +130,8 @@ function ModeToggle() {
 
 export default function Home() {
 
+  const { toggleSidebar } = useSidebar()
+
   const widgets = [
     { href: "/chat", name: "Chat" }
   ]
@@ -111,7 +139,7 @@ export default function Home() {
   return (
     <div className='min-h-screen md:flex md:flex-col w-full h-full'>
       {/* Header */}
-      <header className='px-20 py-10 text-2xl hidden md:inline'>
+      <header className='px-8 py-5 text-2xl hidden md:inline bg-[rgba(0,0,0,0.125)]'>
         <div className="md:flex md:flex-row md:items-center md:justify-between">
           <Link className="text-3xl" href="/">
             &lt;<span className="font-playwrite font-black text-gradient-primary from-white">Rhed</span> /&gt;
@@ -121,26 +149,26 @@ export default function Home() {
               <DropdownMenuTrigger asChild>
                 <Button className='text-2xl hover:scale-[105%] transition ease-in-out' variant="ghost"><span className='text-2xl'>Widgets</span><ChevronDown /></Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='widgets-animation'>
+              <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar'>
                 {widgets.map(widget => <DropdownMenuItem key={widget.href}><Link className="text-2xl" href={widget.href}>{widget.name}</Link></DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
             <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer">
               <Button className='text-2xl hover:scale-[105%] transition ease-in-out' variant="ghost">GitHub</Button>
             </Link>
-            <ModeToggle/>
+            <ModeToggle />
           </nav>
         </div>
       </header>
       {/* Landing Page */}
       <main className='px-5 md:px-20 md:flex-grow md:flex md:flex-col space-y-5'>
         <section className='md:flex-grow md:flex md:items-center md:justify-center'>
-          <div className="flex flex-col md:flex-row items-center justify-around w-full h-full space-y-5">
-            <div className='py-8 md:py-4 space-y-3 text-center md:text-left'>
+          <div className="flex flex-col landscape:flex-row items-center justify-around w-full h-full space-y-5">
+            <div className='py-8 landscape:py-4 space-y-3 text-center landscape:text-left'>
               <h1 className="text-5xl">&lt;<span className='font-playwrite font-black text-gradient-primary'>Rhed</span> /&gt;</h1>
               <p className='text-2xl'>Rhamsez Thevenin&apos;s Content Creator Arc</p>
             </div>
-            <div className='w-full md:w-1/3 aspect-video'>
+            <div className='w-full landscape:w-1/2 aspect-video'>
               <iframe
                 src="https://player.twitch.tv/?channel=RhedDev&parent=rhed.rhamzthev.com&parent=localhost"
                 className="rounded-2xl w-full h-full"
@@ -162,15 +190,17 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className='px-20 py-10 hidden md:inline'>
+      <footer className='px-5 py-3 hidden md:inline bg-[rgba(0,0,0,0.125)]'>
         <div className="text-center">
           <p className='text-base'>&copy; 2025 Rhamsez Thevenin</p>
         </div>
       </footer>
 
       {/* Sidebar */}
-      <SidebarTrigger className='absolute left-3 top-3 md:hidden inline'/>
-      <AppSidebar className='md:hidden inline' widgets={widgets} />
+      <Button onClick={toggleSidebar} className='absolute left-3 top-3 md:hidden'>
+        <Menu />
+      </Button>
+      <AppSidebar className='md:hidden' widgets={widgets} />
     </div>
   )
 }
