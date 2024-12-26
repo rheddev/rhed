@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,7 +29,7 @@
   }
 }
 
-@keyframes slide {
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -38,16 +40,47 @@
   }
 }
 
+@keyframes widgets {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sidebar {
+  from {
+    transform: translateX(-20px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 @layer utilities {
   .text-shadow {
     text-shadow: 1px 1px 3px black;
   }
 
   .message-animation {
-    animation: slide 0.25s ease-out forwards;
+    animation: slide-up 0.25s ease-out forwards;
+  }
+
+  .widgets-animation {
+    animation: widgets 0.1s ease-in-out forwards;
+  }
+
+  .sidebar-animation {
+    animation: sidebar 0.1s ease-in-out forwards;
   }
 
   .text-gradient-primary {
+    padding: 0.2em;
+    margin: -0.2em;
+
     color: transparent;
     background-clip: text;
     background-image: linear-gradient(to right, var(--tw-gradient-stops));

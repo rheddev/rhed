@@ -38,9 +38,9 @@ interface AppSidebarProps {
 function AppSidebar({ widgets, className }: AppSidebarProps) {
   return (
     <Sidebar className={className}>
-      <SidebarHeader>
-        <Link className="text-5xl" href="/">
-          &lt;<span className="font-bold text-gradient-primary from-white">Rhed</span> /&gt;
+      <SidebarHeader className='p-3'>
+        <Link className="text-5xl text-center" href="/">
+          &lt;<span className="font-playwrite font-black text-gradient-primary from-white">Rhed</span> /&gt;
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -51,7 +51,7 @@ function AppSidebar({ widgets, className }: AppSidebarProps) {
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton><span className='text-2xl'>Widgets</span><ChevronDown /></SidebarMenuButton>
                 </CollapsibleTrigger>
-                <CollapsibleContent>
+                <CollapsibleContent className='widgets-animation'>
                   <SidebarMenuSub>
                     {widgets.map((widget) => {
                       return <SidebarMenuSubItem className='py-3' key={widget.href}><Link href={widget.href}>{widget.name}</Link></SidebarMenuSubItem>
@@ -81,13 +81,13 @@ function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button className='hover:scale-[105%]' variant="outline" size="icon">
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent className='widgets-animation' align="center">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
@@ -114,21 +114,21 @@ export default function Home() {
       <header className='px-20 py-10 text-2xl hidden md:inline'>
         <div className="md:flex md:flex-row md:items-center md:justify-between">
           <Link className="text-3xl" href="/">
-            &lt;<span className="font-bold text-gradient-primary from-white">Rhed</span> /&gt;
+            &lt;<span className="font-playwrite font-black text-gradient-primary from-white">Rhed</span> /&gt;
           </Link>
-          <nav className='space-x-3'>
+          <nav className='space-x-5'>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className='text-2xl' variant="ghost">Widgets</Button>
+                <Button className='text-2xl hover:scale-[105%] transition ease-in-out' variant="ghost"><span className='text-2xl'>Widgets</span><ChevronDown /></Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent className='widgets-animation'>
                 {widgets.map(widget => <DropdownMenuItem key={widget.href}><Link className="text-2xl" href={widget.href}>{widget.name}</Link></DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
             <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer">
-              <Button className='text-2xl' variant="ghost">GitHub</Button>
+              <Button className='text-2xl hover:scale-[105%] transition ease-in-out' variant="ghost">GitHub</Button>
             </Link>
-            <ModeToggle />
+            <ModeToggle/>
           </nav>
         </div>
       </header>
@@ -136,8 +136,8 @@ export default function Home() {
       <main className='px-5 md:px-20 md:flex-grow md:flex md:flex-col space-y-5'>
         <section className='md:flex-grow md:flex md:items-center md:justify-center'>
           <div className="flex flex-col md:flex-row items-center justify-around w-full h-full space-y-5">
-            <div className='space-y-3 text-center md:text-left'>
-              <h1 className="text-5xl">&lt;<span className='font-bold text-gradient-primary'>Rhed</span> /&gt;</h1>
+            <div className='py-8 md:py-4 space-y-3 text-center md:text-left'>
+              <h1 className="text-5xl">&lt;<span className='font-playwrite font-black text-gradient-primary'>Rhed</span> /&gt;</h1>
               <p className='text-2xl'>Rhamsez Thevenin&apos;s Content Creation Brand</p>
             </div>
             <div className='w-full md:w-1/3 aspect-video'>
@@ -152,7 +152,7 @@ export default function Home() {
 
         {/* Other Content */}
         <section>
-          <div className="text-center space-y-3">
+          <div className="md:py-4 py-8 text-center space-y-3">
             <h2 className='text-3xl font-bold text-primary_from'>Coming Soon</h2>
             <p className='text-xl'>
               This section will be populated with VODs and recent YouTube videos. Stay tuned!
