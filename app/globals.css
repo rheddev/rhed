@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --color-primary-from: #aa0000;
+    --color-primary-to: #550000;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
 @keyframes slide {
   from {
     opacity: 0;
@@ -20,6 +45,18 @@
 
   .message-animation {
     animation: slide 0.25s ease-out forwards;
+  }
+
+  .text-gradient-primary {
+    color: transparent;
+    background-clip: text;
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+
+    --tw-gradient-from: var(--color-primary-from) var(--tw-gradient-from-position);
+    --tw-gradient-to: var(--color-primary-from) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+
+    --tw-gradient-to: var(--color-primary-to) var(--tw-gradient-to-position);
   }
 }
 
