@@ -138,7 +138,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-around w-full h-full space-y-5">
             <div className='py-8 md:py-4 space-y-3 text-center md:text-left'>
               <h1 className="text-5xl">&lt;<span className='font-playwrite font-black text-gradient-primary'>Rhed</span> /&gt;</h1>
-              <p className='text-2xl'>Rhamsez Thevenin&apos;s Content Creation Brand</p>
+              <p className='text-2xl'>Rhamsez Thevenin&apos;s Content Creator Arc</p>
             </div>
             <div className='w-full md:w-1/3 aspect-video'>
               <iframe
