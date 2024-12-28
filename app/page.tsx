@@ -203,7 +203,7 @@ export default function Home() {
             </div>
             <div className='w-full landscape:w-1/2 aspect-video'>
               <iframe
-                src={`https://player.twitch.tv/?channel=RhedDev&parent=${window.location.hostname}`}
+                src="https://player.twitch.tv/?channel=RhedDev&parent=rhed.rhamzthev.com&parent=localhost"
                 className="rounded-2xl w-full h-full"
                 allowFullScreen
               />
@@ -218,7 +218,7 @@ export default function Home() {
             {videos.map((video) => (
               <div key={video.id} className="space-y-3">
                 <iframe
-                  src={`https://player.twitch.tv/?video=${video.id}&parent=${window.location.hostname}&autoplay=false`}
+                  src={`https://player.twitch.tv/?video=${video.id}&parent=rhed.rhamzthev.com&parent=localhost&autoplay=false`}
                   className="w-full aspect-video rounded-lg"
                   allowFullScreen
                 />
