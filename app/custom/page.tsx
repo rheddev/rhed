@@ -57,7 +57,7 @@ function Custom() {
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             placeholder="Enter your text here"
-                            className="w-full px-4 py-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-shadow"
+                            className="w-full px-4 py-3 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] focus:shadow-[inset_0_3px_4px_rgba(0,0,0,0.4)]"
                             autoFocus
                         />
                         <button
