@@ -24,7 +24,7 @@ function Custom() {
     };
 
     return !text ? (
-        <main className="w-full h-screen flex items-center justify-center bg-black">
+        <main className="w-full h-screen flex items-center justify-center">
             <div className="text-center space-y-8 w-full max-w-lg px-4">
                 <h1 className="font-playwrite text-4xl text-glow font-thin">Custom Glowing Text</h1>
                 <div className="space-y-5 text-white">
