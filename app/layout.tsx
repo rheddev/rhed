@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Roboto_Flex } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
-import { SidebarProvider } from "@/components/ui/sidebar"
 const robotoSans = Roboto_Flex({
   subsets: ["latin"]
 });
@@ -28,9 +27,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
             {children}
-          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
