@@ -33,7 +33,6 @@ const ChatPage: React.FC = () => {
     const socket = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
 
     socket.onopen = () => {
-      console.log('Connected to Twitch Chat');
       // Authenticate with your Twitch channel credentials
       socket.send(`PASS oauth:${process.env.NEXT_PUBLIC_TWITCH_OAUTH_TOKEN}`); // Replace with your OAuth token
       socket.send(`NICK RhedDev`); // Replace with your Twitch username

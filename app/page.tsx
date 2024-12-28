@@ -24,6 +24,7 @@ import {
   useSidebar
 } from "@/components/ui/sidebar"
 import { CollapsibleContent, CollapsibleTrigger, Collapsible } from '@/components/ui/collapsible'
+import { useState, useEffect } from 'react'
 
 interface Widget {
   href: string;
@@ -33,6 +34,13 @@ interface Widget {
 interface AppSidebarProps {
   widgets: Widget[];
   className: string | undefined;
+}
+
+interface TwitchVideo {
+  id: string;
+  title: string;
+  thumbnail_url: string;
+  duration: string;
 }
 
 function AppSidebar({ widgets, className }: AppSidebarProps) {
@@ -113,14 +121,14 @@ function ModeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar' align="center">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+      <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar text-2xl' align="center">
+        <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' onClick={() => setTheme("dark")}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' onClick={() => setTheme("system")}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -131,15 +139,40 @@ function ModeToggle() {
 export default function Home() {
 
   const { toggleSidebar } = useSidebar()
-
+  const [videos, setVideos] = useState<TwitchVideo[]>([]);
+  
+  useEffect(() => {
+    async function fetchVideos() {
+      try {
+        const response = await fetch(
+          `https://api.twitch.tv/helix/videos?user_id=${process.env.NEXT_PUBLIC_TWITCH_USER_ID}&first=3`,
+          {
+            headers: {
+              'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
+              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TWITCH_OAUTH_TOKEN}`,
+            },
+          }
+        );
+        const data = await response.json();
+        setVideos(data.data || []);
+      } catch (error) {
+        console.error('Failed to fetch videos:', error);
+      }
+    }
+    
+    fetchVideos();
+  }, []);
+  
   const widgets = [
-    { href: "/chat", name: "Chat" }
+    { href: "/chat", name: "Chat" },
+    { href: "/events", name: "Events"},
+    { href: "/now-playing", name: "Now Playing"},
   ]
 
   return (
-    <div className='min-h-screen md:flex md:flex-col w-full h-full'>
+    <div className='md:flex md:flex-col w-full h-full'>
       {/* Header */}
-      <header className='px-8 py-5 text-2xl hidden md:inline bg-[rgba(0,0,0,0.125)]'>
+      <header className='px-8 py-5 text-2xl hidden md:inline bg-gradient-to-b from-[rgba(0,0,0,0.34)] to-transparent'>
         <div className="md:flex md:flex-row md:items-center md:justify-between">
           <Link className="text-3xl" href="/">
             &lt;<span className="font-playwrite font-black text-gradient-primary from-white">Rhed</span> /&gt;
@@ -149,8 +182,8 @@ export default function Home() {
               <DropdownMenuTrigger asChild>
                 <Button className='text-2xl hover:scale-[105%] transition ease-in-out' variant="ghost"><span className='text-2xl'>Widgets</span><ChevronDown /></Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar'>
-                {widgets.map(widget => <DropdownMenuItem key={widget.href}><Link className="text-2xl" href={widget.href}>{widget.name}</Link></DropdownMenuItem>)}
+              <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar w-36'>
+                {widgets.map(widget => <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' key={widget.href}><Link href={widget.href}>{widget.name}</Link></DropdownMenuItem>)}
               </DropdownMenuContent>
             </DropdownMenu>
             <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer">
@@ -170,7 +203,7 @@ export default function Home() {
             </div>
             <div className='w-full landscape:w-1/2 aspect-video'>
               <iframe
-                src="https://player.twitch.tv/?channel=RhedDev&parent=rhed.rhamzthev.com&parent=localhost"
+                src={`https://player.twitch.tv/?channel=RhedDev&parent=${window.location.hostname}`}
                 className="rounded-2xl w-full h-full"
                 allowFullScreen
               />
@@ -179,18 +212,26 @@ export default function Home() {
         </section>
 
         {/* Other Content */}
-        <section>
-          <div className="md:py-4 py-8 text-center space-y-3">
-            <h2 className='text-3xl font-bold text-primary_from'>Coming Soon</h2>
-            <p className='text-xl'>
-              This section will be populated with VODs and recent YouTube videos. Stay tuned!
-            </p>
+        <section className="py-8 md:py-4">
+          <h2 className='text-3xl font-bold text-primary_from text-center mb-8'>Recent Streams</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {videos.map((video) => (
+              <div key={video.id} className="space-y-3">
+                <iframe
+                  src={`https://player.twitch.tv/?video=${video.id}&parent=${window.location.hostname}&autoplay=false`}
+                  className="w-full aspect-video rounded-lg"
+                  allowFullScreen
+                />
+                <h3 className="text-lg font-semibold line-clamp-2">{video.title}</h3>
+                <p className="text-sm text-gray-500">{video.duration}</p>
+              </div>
+            ))}
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className='px-5 py-3 hidden md:inline bg-[rgba(0,0,0,0.125)]'>
+      <footer className='px-5 py-3 hidden md:inline bg-gradient-to-t from-[rgba(0,0,0,0.76)] to-transparent'>
         <div className="text-center">
           <p className='text-base'>&copy; 2025 Rhamsez Thevenin</p>
         </div>
