@@ -175,6 +175,7 @@ export default function Home() {
   const widgets = [
     { href: "/chat", name: "Chat" },
     { href: "/events", name: "Events" },
+    { href: "/custom", name: "Custom" },
   ]
 
   return (
