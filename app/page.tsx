@@ -181,9 +181,9 @@ export default function Home() {
   return (
     <SidebarProvider>
       <AppSidebar widgets={widgets} />
-      <main>
+      <main className='w-screen min-h-screen'>
         <SidebarTrigger />
-        <div className="w-full min-h-screen md:flex md:flex-col">
+        <div className="w-full h-full md:flex md:flex-col">
           {/* Header */}
           <header className="hidden px-8 py-5 bg-gradient-to-b from-[rgba(0,0,0,0.34)] to-transparent md:inline">
             <div className="md:flex md:flex-row md:items-center md:justify-between">
