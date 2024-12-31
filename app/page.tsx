@@ -176,6 +176,7 @@ export default function Home() {
     { href: "/chat", name: "Chat" },
     { href: "/events", name: "Events" },
     { href: "/custom", name: "Custom" },
+    { href: "/outrun", name: "Outrun" },
   ]
 
   return (
