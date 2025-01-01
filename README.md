@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+# Rhed
+
+Welcome to the **Rhed** project! This my the personal website for content creation. As Rhed, I will be streaming on Twitch and making videos for YouTube. The website serves as the central hub for my content and provides widgets that enhance live streams and viewer interaction.
+
+![Screenshot 2025-01-01 at 16-43-02 Rhed](https://github.com/user-attachments/assets/c6a9046e-2b78-4258-a1ae-36a62b16b5e9)
+![Screenshot 2025-01-01 at 16-43-29 Rhed](https://github.com/user-attachments/assets/6a7c91d9-bcc3-4b74-a71f-eaccd8068b5c)
+
+---
+
+## Features
+
+### Home Page
+- **Stream Archive**: Displays recent streams pulled dynamically from Twitch.
+- **Videos Section**: Embeds Twitch video player for on-demand replays.
+
+### Widgets
+- **Interactive Chat**: A real-time chat widget for live streams with colorful message gradients.
+- **Event Tracker**: Displays real-time Twitch events such as followers, subscriptions, and gift subs with animations and sound effects.
+- **Custom Text Generator**: Allows users to create glowing custom text using the Playwrite font.
+
+### Sidebar Navigation
+- Links to various pages like widgets, GitHub repository, and theme toggle options (Light, Dark, and System modes).
+- Organized with collapsible menus for easy navigation.
+
+---
+
+## Tech Stack
+
+### Frameworks and Libraries
+- **Next.js**: For the server-side rendered React application.
+- **Tailwind CSS**: For styling with utility-first CSS.
+- **Shadcn**: For accessible and customizable components.
+- **React**: For building reusable UI components.
+
+### APIs and Integrations
+- **Twitch API**: For fetching video archives and listening to event subscriptions.
+- **WebSocket**: For real-time Twitch chat messages and event tracking.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v16 or above)
+- Twitch Developer Account for API access
 
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rhamzthev/rhed.git
+   cd rhed
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Development
+Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
+Set the following environment variables in a `.env.local` file:
+- `NEXT_PUBLIC_TWITCH_USER_ID`
+- `NEXT_PUBLIC_TWITCH_CLIENT_ID`
+- `NEXT_PUBLIC_TWITCH_OAUTH_TOKEN`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
+The project is optimized for deployment on **Vercel**. Check out the [Next.js deployment guide](https://nextjs.org/docs/app/building-your-application/deploying) for details.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Contributions
+We welcome contributions! Feel free to open issues or submit pull requests to improve the project.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+This project is licensed under the terms of the [MIT License](LICENSE).
