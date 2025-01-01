@@ -62,7 +62,7 @@
   }
 }
 
-@keyframes glow {
+@keyframes glowText {
   from {
       text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #ffb4b4, 0 0 4px #ff9090, 0 0 5px #ff6c6c, 0 0 6px #ff4848, 0 0 7px #ff2424;
   }
@@ -72,7 +72,7 @@
   }
 }
 
-@keyframes rotate-glow {
+@keyframes rotateGlowText {
   0% {
     text-shadow: 
       0 calc(-1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
@@ -188,13 +188,17 @@
 
   .text-glow {
     color: white;
-    animation: glow 3.33s ease-in-out infinite alternate;
+    animation: glowText 3.33s ease-in-out infinite alternate;
   }
 
   .text-glow-rotate {
     color: white;
-    animation: rotate-glow 5s linear infinite;
+    animation: rotateGlowText 5s linear infinite;
     --glow-intensity: 13px;
+  }
+
+  .blend {
+    mix-blend-mode: screen;
   }
 }
 

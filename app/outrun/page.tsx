@@ -151,8 +151,8 @@ function Outrun() {
         displacement: { value: 21 },
         path: { value: 4 },
         time: { value: 0.0 },
-        fogStart: { value: 275.0 }, // Distance where fog begins
-        fogEnd: { value: 300.0 }, // Distance where fog completely obscures
+        fogStart: { value: 144.0 }, // Distance where fog begins
+        fogEnd: { value: 233.0 }, // Distance where fog completely obscures
       },
       vertexShader: `
         varying vec2 vUv;
@@ -253,10 +253,14 @@ function Outrun() {
     // });
     const grid = new THREE.Mesh(gridGeometry, gridMaterial);
     grid.rotation.x = -Math.PI / 2;
+
+    grid.layers.enable(BLOOM_SCENE);
     scene.add(grid);
 
     const anotherGrid = new THREE.Mesh(gridGeometry, gridMaterial);
     anotherGrid.rotation.x = -Math.PI / 2;
+
+    grid.layers.enable(BLOOM_SCENE);
     scene.add(anotherGrid);
 
     // Text
@@ -281,6 +285,7 @@ function Outrun() {
       // Reset mesh position:
       box.getCenter(textMesh.position);
       textMesh.position.multiplyScalar(-1);
+      textMesh.layers.enable(BLOOM_SCENE);
 
       // Then add the mesh to a pivot object:
       const pivot = new THREE.Group();
@@ -320,9 +325,9 @@ function Outrun() {
 
     const clock = new THREE.Clock();
 
-    const pivot = new THREE.Group();
-    scene.add(pivot);
-    pivot.add();
+    // const pivot = new THREE.Group();
+    // scene.add(pivot);
+    // pivot.add();
 
     // Animation loop
     const animate = () => {

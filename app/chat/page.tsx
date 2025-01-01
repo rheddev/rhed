@@ -90,7 +90,7 @@ const ChatPage: React.FC = () => {
           <div key={index} id={index.toString()} className="break-words text-shadow text-xl message-animation">
             <span
               style={{
-                color: getColorGradient(messagePositions[index] || 0, '#000000', '#aa0000') // top to bottom
+                color: getColorGradient(messagePositions[index] || 0, '#ff7777', '#aa0000') // top to bottom
               }}
               className="font-bold">{msg.user}:</span>{' '}
             <span className="text-white">{msg.chatMessage}</span>

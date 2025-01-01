@@ -11,7 +11,7 @@ function Custom() {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
-        await navigator.clipboard.writeText('/custom?text=');
+        await navigator.clipboard.writeText('/glow?text=');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -19,7 +19,7 @@ function Custom() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (inputText.trim()) {
-            router.push(`/custom?text=${encodeURIComponent(inputText.trim())}`);
+            router.push(`/glow?text=${encodeURIComponent(inputText.trim())}`);
         }
     };
 
@@ -35,7 +35,7 @@ function Custom() {
                             onMouseEnter={() => setIsHovered(true)}
                             onMouseLeave={() => setIsHovered(false)}
                         >
-                            {isHovered ? '/custom?text=' : '/custom?text=Your Text Here'}
+                            {isHovered ? '/glow?text=' : '/glow?text=Your Text Here'}
                         </code>
 
                         {/* Hover tooltip */}
