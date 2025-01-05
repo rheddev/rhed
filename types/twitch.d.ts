@@ -1,14 +1,14 @@
-interface TwitchUser {
+interface TwitchEventUser {
   user_id: string;
   user_login: string;
   user_name: string;
 }
 
-interface TwitchFollow extends TwitchUser {
+interface TwitchFollow extends TwitchEventUser {
   followed_at: string;
 }
 
-interface TwitchSub extends TwitchUser {
+interface TwitchSub extends TwitchEventUser {
   tier: string;
   is_gift: boolean;
 }
@@ -24,7 +24,7 @@ interface TwitchMessage {
   text: string;
 }
 
-interface TwitchResub extends TwitchUser {
+interface TwitchResub extends TwitchEventUser {
   cumulative_months: number;
   duration_months: number;
   message: TwitchMessage;
@@ -32,7 +32,7 @@ interface TwitchResub extends TwitchUser {
   tier: string;
 }
 
-interface TwitchGiftSub extends TwitchUser {
+interface TwitchGiftSub extends TwitchEventUser {
   cumulative_total: number;
   is_anonymous: boolean;
   tier: string;
