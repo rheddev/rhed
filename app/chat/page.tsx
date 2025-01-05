@@ -108,6 +108,11 @@ const ChatPage: React.FC = () => {
     );
   }
 
+  function isValidHexColor(color: string): boolean {
+    const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
+    return hexColorRegex.test(color);
+  }
+
   return (
     <div className="h-screen w-screen flex items-end justify-start">
       <div>
@@ -115,7 +120,7 @@ const ChatPage: React.FC = () => {
           <div key={index} id={index.toString()} className="break-words text-shadow text-2xl message-animation">
             <span
               style={{
-                color: getColorGradient(messagePositions[index] || 0, '#AA0000', message.color) // Top to bottom
+                color: getColorGradient(messagePositions[index] || 0, '#AA0000', isValidHexColor(message.color) ? message.color : "#AA0000" ) // Top to bottom
               }}
               className="font-bold"
             >
