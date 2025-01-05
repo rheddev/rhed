@@ -1,20 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
-
-interface ChatMessage {
-  color: string;
-  displayName: string;
-  msg: string;
-}
-
-interface TwitchUser {
-  id: string;
-  login: string;
-  displayName: string;
-  profileImageUrl: string;
-}
+import { useState, useCallback, useEffect } from "react";
 
 export function useTwitch() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<TwitchChatMessage[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<TwitchUser | null>(null);
@@ -24,9 +11,27 @@ export function useTwitch() {
   const [event, setEvent] = useState<TwitchEvent | null>(null);
   const [eventSocket, setEventSocket] = useState<WebSocket | null>(null);
 
+  const [videos, setVideos] = useState([]);
+
+  const fetchVideos = useCallback(async () => {
+    try {
+      const response = await fetch("/api/twitch/videos");
+      if (!response.ok) {
+        throw new Error("Failed to fetch videos");
+      }
+      const data = await response.json();
+      setVideos(data);
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch videos"
+      );
+    }
+  }, []);
+
   const checkAuthStatus = useCallback(async () => {
     try {
-      const response = await fetch('/api/twitch/current-user');
+      const response = await fetch("/api/twitch/current-user");
       const data = await response.json();
 
       if (data.error) {
@@ -40,17 +45,16 @@ export function useTwitch() {
         setUser(data.user);
       }
       return data.authenticated;
-
     } catch (error) {
-        console.error(error);
-      setError('Failed to check authentication status');
+      console.error(error);
+      setError("Failed to check authentication status");
       setIsAuthenticated(false);
       return false;
     }
   }, []);
 
   const login = useCallback(() => {
-    window.location.href = '/api/twitch/authorize';
+    window.location.href = "/api/twitch/authorize";
   }, []);
 
   // CHAT
@@ -58,15 +62,15 @@ export function useTwitch() {
     if (!isAuthenticated || chatSocket) return;
 
     try {
-      const tokenResponse = await fetch('/api/twitch/token');
+      const tokenResponse = await fetch("/api/twitch/token");
       const { access_token } = await tokenResponse.json();
 
       if (!access_token) {
-        setError('Failed to get access token');
+        setError("Failed to get access token");
         return;
       }
 
-      const newSocket = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+      const newSocket = new WebSocket("wss://irc-ws.chat.twitch.tv:443");
 
       newSocket.onopen = () => {
         newSocket.send(`CAP REQ :twitch.tv/commands twitch.tv/tags`);
@@ -80,12 +84,13 @@ export function useTwitch() {
       newSocket.onmessage = (event) => {
         const message = event.data as string;
 
-        if (message.startsWith('PING')) {
-          newSocket.send('PONG');
+        if (message.startsWith("PING")) {
+          newSocket.send("PONG");
           return;
         }
 
-        const regex = /color=(?:([^;]+)|);.*display-name=([^;]+);.*?PRIVMSG #\w+ :(.*)/;
+        const regex =
+          /color=(?:([^;]+)|);.*display-name=([^;]+);.*?PRIVMSG #\w+ :(.*)/;
         const match = message.match(regex);
         if (match) {
           const [, color, displayName, msg] = match;
@@ -94,8 +99,8 @@ export function useTwitch() {
       };
 
       newSocket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        setError('WebSocket connection error');
+        console.error("WebSocket error:", error);
+        setError("WebSocket connection error");
       };
 
       newSocket.onclose = () => {
@@ -103,10 +108,9 @@ export function useTwitch() {
       };
 
       setChatSocket(newSocket);
-
     } catch (error) {
-        console.error(error);
-      setError('Failed to start chat connection');
+      console.error(error);
+      setError("Failed to start chat connection");
     }
   }, [isAuthenticated, chatSocket, user]);
 
@@ -122,7 +126,7 @@ export function useTwitch() {
     if (!isAuthenticated || eventSocket) return;
 
     try {
-      const newSocket = new WebSocket('wss://eventsub.wss.twitch.tv/ws');
+      const newSocket = new WebSocket("wss://eventsub.wss.twitch.tv/ws");
       // const newSocket = new WebSocket("ws://localhost:8080/ws");
 
       newSocket.onopen = () => {
@@ -137,7 +141,7 @@ export function useTwitch() {
 
         if (message_type === "session_welcome") {
           const sessionId = data.payload.session.id;
-          
+
           const event_types = [
             {
               type: "channel.follow",
@@ -177,7 +181,9 @@ export function useTwitch() {
                 {
                   method: "POST",
                   headers: {
-                    Authorization: `Bearer ${await fetch('/api/twitch/token').then(r => r.json()).then(d => d.access_token)}`,
+                    Authorization: `Bearer ${await fetch("/api/twitch/token")
+                      .then((r) => r.json())
+                      .then((d) => d.access_token)}`,
                     "Client-Id": process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
                     "Content-Type": "application/json",
                   },
@@ -206,17 +212,27 @@ export function useTwitch() {
           if (event_type === "channel.subscribe" && event_payload.is_gift) {
             return;
           }
-          
-          if (["channel.follow", "channel.subscribe", "channel.subscription.gift", "channel.subscription.message"].includes(event_type)) {
-            const newEvent: TwitchEvent = { type: event_type, event: event_payload };
-            setQueue(prev => [...prev, newEvent]);
+
+          if (
+            [
+              "channel.follow",
+              "channel.subscribe",
+              "channel.subscription.gift",
+              "channel.subscription.message",
+            ].includes(event_type)
+          ) {
+            const newEvent: TwitchEvent = {
+              type: event_type,
+              event: event_payload,
+            };
+            setQueue((prev) => [...prev, newEvent]);
           }
         }
       };
 
       newSocket.onerror = (error) => {
         console.error("WebSocket error:", error);
-        setError('EventSub WebSocket connection error');
+        setError("EventSub WebSocket connection error");
       };
 
       newSocket.onclose = () => {
@@ -224,10 +240,9 @@ export function useTwitch() {
       };
 
       setEventSocket(newSocket);
-
     } catch (error) {
       console.error(error);
-      setError('Failed to start events connection');
+      setError("Failed to start events connection");
     }
   }, [isAuthenticated, eventSocket, user]);
 
@@ -254,12 +269,14 @@ export function useTwitch() {
   }, [checkAuthStatus]);
 
   return {
+    videos,
     messages,
     isAuthenticated,
     error,
     user,
     event,
     queue,
+    fetchVideos,
     checkAuthStatus,
     login,
     startChatConnection,
@@ -267,6 +284,6 @@ export function useTwitch() {
     startEventsConnection,
     closeEventsConnection,
     pollEvent,
-    removeEvent
+    removeEvent,
   };
 }

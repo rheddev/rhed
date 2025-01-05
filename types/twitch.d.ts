@@ -44,3 +44,34 @@ type TwitchEvent =
   | { type: "channel.subscribe"; event: TwitchSub }
   | { type: "channel.subscription.gift"; event: TwitchGiftSub }
   | { type: "channel.subscription.message"; event: TwitchResub };
+
+interface TwitchVideo {
+  id: string;
+  title: string;
+  thumbnail_url: string;
+  duration: string;
+  url: string;
+  created_at: string;
+  view_count: number;
+}
+
+interface TwitchTokenResponse {
+  access_token: string;
+  token_type: string;
+  scope?: string[];
+  expires_in: number;
+  refresh_token?: string;
+}
+
+interface TwitchChatMessage {
+  color: string;
+  displayName: string;
+  msg: string;
+}
+
+interface TwitchUser {
+  id: string;
+  login: string;
+  displayName: string;
+  profileImageUrl: string;
+}

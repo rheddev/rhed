@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
+import React, { useEffect } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Moon, Sun, ChevronDown, Menu } from "lucide-react"
-import { useTheme } from 'next-themes'
+} from "@/components/ui/dropdown-menu";
+import { Moon, Sun, ChevronDown, Menu } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   Sidebar,
   SidebarContent,
@@ -23,9 +23,14 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarProvider,
-  useSidebar
-} from "@/components/ui/sidebar"
-import { CollapsibleContent, CollapsibleTrigger, Collapsible } from '@/components/ui/collapsible'
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  CollapsibleContent,
+  CollapsibleTrigger,
+  Collapsible,
+} from "@/components/ui/collapsible";
+import { useTwitch } from "@/hooks/use-twitch";
 
 interface Widget {
   href: string;
@@ -36,56 +41,70 @@ interface AppSidebarProps {
   widgets: Widget[];
 }
 
-interface TwitchVideo {
-  id: string;
-  title: string;
-  thumbnail_url: string;
-  duration: string;
-}
-
 function AppSidebar({ widgets }: AppSidebarProps) {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <Sidebar>
-      <SidebarHeader className='p-5'>
+      <SidebarHeader className="p-5">
         <Link className="text-5xl text-center" href="/">
-          &lt;<span className="font-playwrite font-black text-gradient-primary from-white">Rhed</span> /&gt;
+          &lt;
+          <span className="font-playwrite font-black text-gradient-primary from-white">
+            Rhed
+          </span>{" "}
+          /&gt;
         </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu className='space-y-5'>
-            <Collapsible className='group/collapsible'>
+          <SidebarMenu className="space-y-5">
+            <Collapsible className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton className='text-2xl flex justify-between'><span>Widgets</span><ChevronDown className="transition-transform group-data-[state=open]/collapsible:rotate-180" /></SidebarMenuButton>
+                  <SidebarMenuButton className="text-2xl flex justify-between">
+                    <span>Widgets</span>
+                    <ChevronDown className="transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                  </SidebarMenuButton>
                 </CollapsibleTrigger>
-                <CollapsibleContent className='sidebar-dropdown-animation'>
-                  <SidebarMenuSub className='text-2xl space-y-5 py-3'>
+                <CollapsibleContent className="sidebar-dropdown-animation">
+                  <SidebarMenuSub className="text-2xl space-y-5 py-3">
                     {widgets.map((widget) => {
-                      return <SidebarMenuSubItem key={widget.href}><Link href={widget.href}>{widget.name}</Link></SidebarMenuSubItem>
+                      return (
+                        <SidebarMenuSubItem key={widget.href}>
+                          <Link href={widget.href}>{widget.name}</Link>
+                        </SidebarMenuSubItem>
+                      );
                     })}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
             </Collapsible>
             <SidebarMenuItem>
-              <SidebarMenuButton className='text-2xl' asChild>
-                <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer">GitHub</Link>
+              <SidebarMenuButton className="text-2xl" asChild>
+                <Link
+                  href="https://github.com/rhamzthev/rhed"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <Collapsible className='group/collapsible'>
+            <Collapsible className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton className='hover:scale-105 flex items-center justify-center' variant="outline" size="default">
+                  <SidebarMenuButton
+                    className="hover:scale-105 flex items-center justify-center"
+                    variant="outline"
+                    size="default"
+                  >
                     <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                     <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                     <span className="sr-only">Toggle theme</span>
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
-                <CollapsibleContent className='sidebar-dropdown-animation'>
-                  <SidebarMenuSub className='text-2xl space-y-5 py-3'>
+                <CollapsibleContent className="sidebar-dropdown-animation">
+                  <SidebarMenuSub className="text-2xl space-y-5 py-3">
                     <SidebarMenuSubItem onClick={() => setTheme("light")}>
                       Light
                     </SidebarMenuSubItem>
@@ -103,93 +122,117 @@ function AppSidebar({ widgets }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <p className='text-center text-base'>&copy; 2025 Rhamsez Thevenin</p>
+        <p className="text-center text-base">&copy; 2025 Rhamsez Thevenin</p>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
 
 function SidebarTrigger() {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = useSidebar();
 
   return (
-    < Button onClick = { toggleSidebar } className = 'absolute left-3 top-3 md:hidden' >
+    <Button onClick={toggleSidebar} className="absolute left-3 top-3 md:hidden">
       <Menu />
-    </Button >
-  )
+    </Button>
+  );
 }
 
 function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className='transition ease-in-out hover:scale-105' variant="outline" size="icon">
+        <Button
+          className="transition ease-in-out hover:scale-105"
+          variant="outline"
+          size="icon"
+        >
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className='navbar-dropdown-animation bg-sidebar text-2xl' align="center">
-        <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' onClick={() => setTheme("light")}>
+      <DropdownMenuContent
+        className="navbar-dropdown-animation bg-sidebar text-2xl"
+        align="center"
+      >
+        <DropdownMenuItem
+          className="hover:font-bold transition-all ease-in-out"
+          onClick={() => setTheme("light")}
+        >
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' onClick={() => setTheme("dark")}>
+        <DropdownMenuItem
+          className="hover:font-bold transition-all ease-in-out"
+          onClick={() => setTheme("dark")}
+        >
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem className='hover:font-bold transition-all ease-in-out' onClick={() => setTheme("system")}>
+        <DropdownMenuItem
+          className="hover:font-bold transition-all ease-in-out"
+          onClick={() => setTheme("system")}
+        >
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 export default function Home() {
-
-  const [videos, setVideos] = useState<TwitchVideo[]>([]);
+  const { videos, fetchVideos } = useTwitch();
+  // const [videos, setVideos] = useState<TwitchVideo[]>([]);
 
   useEffect(() => {
-    async function fetchVideos() {
-      try {
-        const response = await fetch(
-          `https://api.twitch.tv/helix/videos?user_id=${process.env.NEXT_PUBLIC_TWITCH_USER_ID}&first=3`,
-          {
-            headers: {
-              'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
-              'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TWITCH_OAUTH_TOKEN}`,
-            },
-          }
-        );
-        const data = await response.json();
-        setVideos(data.data || []);
-      } catch (error) {
-        console.error('Failed to fetch videos:', error);
-      }
-    }
-
     fetchVideos();
   }, []);
+
+  // useEffect(() => {
+  //   async function fetchVideos() {
+  //     try {
+  //       const response = await fetch(
+  //         `https://api.twitch.tv/helix/videos?user_id=${process.env.NEXT_PUBLIC_TWITCH_USER_ID}&first=3`,
+  //         {
+  //           headers: {
+  //             'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
+  //             'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TWITCH_OAUTH_TOKEN}`,
+  //           },
+  //         }
+  //       );
+  //       const data = await response.json();
+  //       setVideos(data.data || []);
+  //     } catch (error) {
+  //       console.error('Failed to fetch videos:', error);
+  //     }
+  //   }
+
+  //   fetchVideos();
+  // }, []);
 
   const widgets = [
     { href: "/chat", name: "Chat" },
     { href: "/events", name: "Events (v2)" },
     { href: "/glow", name: "Glow" },
     { href: "/outrun", name: "Outrun" },
-  ]
+  ];
 
   return (
     <SidebarProvider>
       <AppSidebar widgets={widgets} />
-      <main className='w-screen min-h-screen'>
+      <main className="w-screen min-h-screen">
         <SidebarTrigger />
         <div className="w-full h-full md:flex md:flex-col">
           {/* Header */}
           <header className="hidden px-8 py-5 bg-gradient-to-b from-[rgba(0,0,0,0.34)] to-transparent md:inline">
             <div className="md:flex md:flex-row md:items-center md:justify-between">
               <Link className="text-3xl" href="/">
-                &lt;<span className="font-black font-playwrite text-gradient-primary from-white">Rhed</span> /&gt;
+                &lt;
+                <span className="font-black font-playwrite text-gradient-primary from-white">
+                  Rhed
+                </span>{" "}
+                /&gt;
               </Link>
 
               <nav className="space-x-8">
@@ -205,7 +248,7 @@ export default function Home() {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent className="w-32 bg-sidebar navbar-dropdown-animation">
-                    {widgets.map(widget => (
+                    {widgets.map((widget) => (
                       <DropdownMenuItem
                         className="transition-all ease-in-out hover:font-bold"
                         key={widget.href}
@@ -216,7 +259,11 @@ export default function Home() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                <Link href="https://github.com/rhamzthev/rhed" target="_blank" rel="noopener noreferrer">
+                <Link
+                  href="https://github.com/rhamzthev/rhed"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Button
                     className="text-2xl transition ease-in-out hover:scale-105"
                     variant="ghost"
@@ -236,9 +283,15 @@ export default function Home() {
               <div className="flex flex-col w-full h-full md:space-x-8 md:flex-row md:items-center md:justify-around">
                 <div className="text-center pb-5 md:text-left">
                   <h1 className="text-5xl">
-                    &lt;<span className="font-black font-playwrite text-gradient-primary">Rhed</span> /&gt;
+                    &lt;
+                    <span className="font-black font-playwrite text-gradient-primary">
+                      Rhed
+                    </span>{" "}
+                    /&gt;
                   </h1>
-                  <p className="text-2xl">Rhamsez Thevenin&apos;s Content Creator Arc</p>
+                  <p className="text-2xl">
+                    Rhamsez Thevenin&apos;s Content Creator Arc
+                  </p>
                 </div>
 
                 <div className="w-full aspect-video md:w-1/2">
@@ -253,16 +306,20 @@ export default function Home() {
 
             {/* Recent Streams Section */}
             <section className="md:flex-grow">
-              <h2 className="text-3xl font-bold text-center text-primary_from pb-5">Recent Streams</h2>
+              <h2 className="text-3xl font-bold text-center text-primary_from pb-5">
+                Recent Streams
+              </h2>
               <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-                {videos.map((video) => (
+                {videos.map((video: TwitchVideo) => (
                   <div key={video.id} className="space-y-1">
                     <iframe
                       src={`https://player.twitch.tv/?video=${video.id}&parent=rhed.rhamzthev.com&parent=localhost&autoplay=false`}
                       className="w-full aspect-video rounded-lg"
                       allowFullScreen
                     />
-                    <h3 className="text-lg font-semibold line-clamp-2">{video.title}</h3>
+                    <h3 className="text-lg font-semibold line-clamp-2">
+                      {video.title}
+                    </h3>
                     <p className="text-sm text-gray-500">{video.duration}</p>
                   </div>
                 ))}
@@ -279,6 +336,5 @@ export default function Home() {
         </div>
       </main>
     </SidebarProvider>
-  )
+  );
 }
-
