@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const clientId = process.env.TWITCH_CLIENT_ID;
+    const clientId = process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID;
     const clientSecret = process.env.TWITCH_CLIENT_SECRET;
     const redirectUri = process.env.TWITCH_REDIRECT_URI;
 
