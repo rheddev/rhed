@@ -216,6 +216,7 @@ export default function Home() {
     { href: "/events", name: "Events (v2)" },
     { href: "/glow", name: "Glow" },
     { href: "/outrun", name: "Outrun" },
+    { href: "/now-playing", name: "Now Playing" },
   ];
 
   return (
