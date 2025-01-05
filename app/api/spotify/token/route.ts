@@ -96,15 +96,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-export function getSpotifyTokens(request: NextRequest) {
-    const accessToken = request.cookies.get('spotify_access_token')?.value;
-    const refreshToken = request.cookies.get('spotify_refresh_token')?.value;
-    const tokenExpiry = request.cookies.get('spotify_token_expiry')?.value;
-  
-    return {
-      accessToken,
-      refreshToken,
-      tokenExpiry: tokenExpiry ? parseInt(tokenExpiry) : null,
-    };
-  }

@@ -1,5 +1,5 @@
+import { getSpotifyTokens } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
-import { getSpotifyTokens } from '../token/route';
 
 // Type definitions for the Spotify response
 interface SpotifyImage {

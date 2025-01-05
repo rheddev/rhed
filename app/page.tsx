@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import {
@@ -25,7 +26,6 @@ import {
   useSidebar
 } from "@/components/ui/sidebar"
 import { CollapsibleContent, CollapsibleTrigger, Collapsible } from '@/components/ui/collapsible'
-import { useState, useEffect } from 'react'
 
 interface Widget {
   href: string;

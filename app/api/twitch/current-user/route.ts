@@ -1,5 +1,5 @@
+import { getTwitchTokens } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
-import { getTwitchTokens } from '../token/route';
 
 export async function GET(request: NextRequest) {
   try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, Suspense } from "react";
+import React, { useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import * as THREE from "three";

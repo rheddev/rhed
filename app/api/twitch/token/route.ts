@@ -96,15 +96,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-export function getTwitchTokens(request: NextRequest) {
-  const accessToken = request.cookies.get('twitch_access_token')?.value;
-  const refreshToken = request.cookies.get('twitch_refresh_token')?.value;
-  const tokenExpiry = request.cookies.get('twitch_token_expiry')?.value;
-
-  return {
-    accessToken,
-    refreshToken,
-    tokenExpiry: tokenExpiry ? parseInt(tokenExpiry) : null,
-  };
-}

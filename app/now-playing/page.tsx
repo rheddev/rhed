@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 // app/page.tsx
 "use client";
-
+import React from 'react'; 
 import { useSpotify } from "@/hooks/use-spotify";
 
 const SpotifyLogo = () => {

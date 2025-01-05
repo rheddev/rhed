@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Event3D } from "@/components/events/Event3D";
 import { useTwitch } from "@/hooks/use-twitch";
 

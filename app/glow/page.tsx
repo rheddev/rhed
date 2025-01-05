@@ -1,6 +1,6 @@
 "use client"
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 
 function Custom() {
     const router = useRouter();

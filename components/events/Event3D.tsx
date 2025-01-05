@@ -1,5 +1,5 @@
 // /components/Event3D.tsx
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { FontLoader } from "three/addons/loaders/FontLoader.js";
 import { floatingObject } from "@/utils/three";
@@ -70,7 +70,7 @@ export function Event3D({ event }: Event3DProps) {
           : event?.event.user_name;
       const headingOne: THREE.Group<THREE.Object3DEventMap> = text3D(
         camera,
-        `${ANSI_COLORS.RED} ${name}` || "Username",
+        `${ANSI_COLORS.RED} ${name}`,
         new THREE.Vector3(0, 0, -100),
         {
           regular,
@@ -120,7 +120,7 @@ export function Event3D({ event }: Event3DProps) {
                 break;
 
               case "channel.subscribe":
-                const subscribe: TwitchSub = event.event;
+                { const subscribe: TwitchSub = event.event;
                 total_height += sizes.one + spacing;
                 headingTwo = text3D(
                   camera,
@@ -141,10 +141,10 @@ export function Event3D({ event }: Event3DProps) {
                 );
                 headingTwoRef.current = headingTwo;
                 headingGroup.add(headingTwoRef.current);
-                break;
+                break; }
 
               case "channel.subscription.message":
-                const resub: TwitchResub = event.event;
+                { const resub: TwitchResub = event.event;
 
                 // resubscribed for # months at Tier #!
                 total_height += sizes.one + spacing;
@@ -219,9 +219,9 @@ export function Event3D({ event }: Event3DProps) {
                   headingGroup.add(headingFourRef.current);
                 }
 
-                break;
+                break; }
               case "channel.subscription.gift":
-                const giftSub: TwitchGiftSub = event.event;
+                { const giftSub: TwitchGiftSub = event.event;
 
                 total_height += sizes.one + spacing;
                 headingTwo = text3D(
@@ -266,7 +266,7 @@ export function Event3D({ event }: Event3DProps) {
                   headingThreeRef.current = headingThree;
                   headingGroup.add(headingThreeRef.current);
                 }
-                break;
+                break; }
               default:
                 break;
             }

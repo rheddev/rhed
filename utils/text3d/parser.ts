@@ -1,8 +1,8 @@
 export function text3dParser(tokens: Token[]): RootNode {
   let currentTokenIndex = 0;
-  let currentColor = 'WHITE';  // Default color
-  let currentStyle: StyleType = 'REGULAR';  // Default style
-  const styleStack: StyleType[] = [];  // Stack to handle nested styles
+  let currentColor = "WHITE"; // Default color
+  let currentStyle: StyleType = "REGULAR"; // Default style
+  const styleStack: StyleType[] = []; // Stack to handle nested styles
 
   function peek(): Token {
     return tokens[currentTokenIndex];
@@ -15,20 +15,20 @@ export function text3dParser(tokens: Token[]): RootNode {
   function parseText(): TextNode {
     const token = consume();
     return {
-      type: 'text',
+      type: "text",
       value: token.value,
       color: currentColor,
-      style: currentStyle
+      style: currentStyle,
     };
   }
 
   function parseEmote(): EmoteNode {
     const token = consume();
     return {
-      type: 'emote',
+      type: "emote",
       emoteId: token.emoteId!,
       color: currentColor,
-      style: currentStyle
+      style: currentStyle,
     };
   }
 
@@ -37,7 +37,7 @@ export function text3dParser(tokens: Token[]): RootNode {
 
     // If we encounter the same style that's currently active, it's a closing tag
     if (currentStyle === token.style) {
-      currentStyle = styleStack.pop() || 'REGULAR';  // Restore previous style or default to REGULAR
+      currentStyle = styleStack.pop() || "REGULAR"; // Restore previous style or default to REGULAR
     } else {
       // Push current style to stack and set new style
       styleStack.push(currentStyle);
@@ -47,33 +47,35 @@ export function text3dParser(tokens: Token[]): RootNode {
 
   function parse(): RootNode {
     const rootNode: RootNode = {
-      type: 'root',
-      children: []
+      type: "root",
+      children: [],
     };
 
     while (currentTokenIndex < tokens.length) {
       const currentToken = peek();
 
       switch (currentToken.type) {
-        case 'TEXT':
+        case "TEXT":
           rootNode.children.push(parseText());
           break;
-          
-        case 'COLOR':
+
+        case "COLOR": {
           const colorToken = consume();
-          currentColor = colorToken.color || 'WHITE';
+          currentColor = colorToken.color || "WHITE";
           break;
-          
-        case 'STYLE':
+        }
+
+        case "STYLE": {
           const styleToken = consume();
           handleStyle(styleToken);
           break;
-          
-        case 'EMOTE':
+        }
+
+        case "EMOTE":
           rootNode.children.push(parseEmote());
           break;
-          
-        case 'EOF':
+
+        case "EOF":
           consume();
           return rootNode;
       }
