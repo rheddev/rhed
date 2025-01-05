@@ -122,8 +122,8 @@ export function useTwitch() {
     if (!isAuthenticated || eventSocket) return;
 
     try {
-      // const newSocket = new WebSocket('wss://eventsub.wss.twitch.tv/ws');
-      const newSocket = new WebSocket("ws://localhost:8080/ws");
+      const newSocket = new WebSocket('wss://eventsub.wss.twitch.tv/ws');
+      // const newSocket = new WebSocket("ws://localhost:8080/ws");
 
       newSocket.onopen = () => {
         console.log("Connected to Twitch EventSub");
