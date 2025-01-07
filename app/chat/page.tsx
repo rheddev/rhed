@@ -56,8 +56,8 @@ const ChatPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-white">Twitch Chat Viewer</h1>
-          <p className="text-gray-400 text-lg">
+          <h1 className="text-4xl font-bold">Twitch Chat Viewer</h1>
+          <p className="text-rhed-accent text-lg">
             Connect to view your Twitch chat
           </p>
         </div>

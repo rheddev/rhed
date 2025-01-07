@@ -16,15 +16,21 @@ export default {
       },
       colors: {
         sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
+          DEFAULT: "var(--rhed-background)",
+          foreground: "var(--rhed-foreground",
           primary: "hsl(var(--sidebar-primary))",
           "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
+          accent: "var(--rhed-accent)",
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        rhed: {
+          background: "var(--rhed-background)",
+          foreground: "var(--rhed-foreground)",
+          accent: "var(--rhed-accent)",
+        },
+        fade: "var(--fade)",
       },
       fontFamily: {
         playwrite: ["Playwrite US Trad", "serif"],

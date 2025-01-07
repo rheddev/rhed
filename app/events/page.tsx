@@ -100,10 +100,10 @@ export default function EventsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold">
             Twitch Events Viewer
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-rhed-accent text-lg">
             Connect to view your Twitch Events
           </p>
         </div>

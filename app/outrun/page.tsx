@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useRef, Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import * as THREE from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -14,8 +14,25 @@ import { FontLoader } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 
 function Outrun() {
+    const router = useRouter();
   const searchParams = useSearchParams();
   const text = searchParams.get("text");
+    const [inputText, setInputText] = useState('');
+    const [isHovered, setIsHovered] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        await navigator.clipboard.writeText('/outrun?text=');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (inputText.trim()) {
+            router.push(`/outrun?text=${encodeURIComponent(inputText.trim())}`);
+        }
+    };
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -153,6 +170,7 @@ function Outrun() {
         time: { value: 0.0 },
         fogStart: { value: 144.0 }, // Distance where fog begins
         fogEnd: { value: 233.0 }, // Distance where fog completely obscures
+        fogColor: { value: new THREE.Color(0x130000) }, // Distance where fog completely obscures
       },
       vertexShader: `
         varying vec2 vUv;
@@ -211,9 +229,10 @@ function Outrun() {
         uniform float lineWidth;
         uniform float fogStart;
         uniform float fogEnd;
+        uniform vec3 fogColor; // Add this line for the fog color
         varying vec2 vUv;
         varying float vFogDepth;
-        
+
         void main() {
           vec2 coord = vUv * vec2(widthSegments, heightSegments);
           vec2 ddx = dFdx(coord);
@@ -236,8 +255,11 @@ function Outrun() {
           // Calculate fog factor
           float fogFactor = clamp((fogEnd - vFogDepth) / (fogEnd - fogStart), 0.0, 1.0);
           
-          // Apply fog by fading to transparent
-          gl_FragColor = vec4(intensity, fogFactor);
+          // Interpolate between intensity and fogColor based on fogFactor
+          vec3 finalColor = mix(fogColor, intensity, fogFactor);
+          
+          // Set the final color with full opacity
+          gl_FragColor = vec4(finalColor, 1.0);
         }
       `,
       transparent: true, // Enable transparency for fog fade-out
@@ -372,12 +394,9 @@ function Outrun() {
     return () => {
       window.removeEventListener("resize", handleResize);
       rendererRef.current?.dispose();
-      // controlsRef.current?.dispose();
       scene.clear();
       gridGeometry.dispose();
       gridMaterial.dispose();
-      // gridTexture.dispose();
-      // gridTerrainTexture.dispose();
     };
   }, [text]);
 
@@ -391,16 +410,52 @@ function Outrun() {
         <h1 className="font-playwrite text-bold text-4xl text-[#aa0000]">
           Outrun
         </h1>
-        <div className="space-y-4 text-white">
-          <p className="text-xl">Add your text using the URL parameter:</p>
-          <code className="block bg-gray-800 p-4 rounded-lg text-lg">
-            /outrun?text=Your Text Here
-          </code>
-          <p className="text-sm text-gray-400">
-            The text will be displayed behind an outrun landscape.
-            font
-          </p>
-        </div>
+        <div className="space-y-5">
+                    <div className="relative group">
+                        <code
+                            className="block bg-black/25 p-5 rounded-lg text-lg cursor-pointer transition-all duration-200 hover:bg-white/25"
+                            onClick={handleCopy}
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                        >
+                            {isHovered ? '/outrun?text=' : '/outrun?text=Your Text Here'}
+                        </code>
+
+                        {/* Hover tooltip */}
+                        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black/25  text-sm py-2 px-3 rounded-md opacity-0 transition-opacity duration-200 pointer-events-none group-hover:opacity-90">
+                            Click to copy
+                        </div>
+
+                        {/* Copied confirmation */}
+                        {copied && (
+                            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-[#0a0] text-white text-sm py-2 px-3 rounded-md opacity-90 transition-opacity duration-200">
+                                Copied to clipboard!
+                            </div>
+                        )}
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <input
+                            type="text"
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            placeholder="Enter your text here"
+                            className="w-full px-4 py-3 bg-rhed-accent text-rhed-background rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] focus:shadow-[inset_0_3px_4px_rgba(0,0,0,0.8)]"
+                            autoFocus
+                        />
+                        <button
+                            type="submit"
+                            className="w-full px-4 py-3 bg-rhed-foreground text-rhed-background rounded-lg font-medium hover:bg-rhed-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                            disabled={!inputText.trim()}
+                        >
+                            Generate Outrun
+                        </button>
+                    </form>
+
+                    <p className="text-sm text-rhed-accent">
+                        The text will be displayed in the <span className="font-playwrite">Playwrite font</span> behind an infinite outrun.
+                    </p>
+                </div>
       </div>
     </main>
   );

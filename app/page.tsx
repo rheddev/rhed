@@ -49,7 +49,7 @@ function AppSidebar({ widgets }: AppSidebarProps) {
       <SidebarHeader className="p-5">
         <Link className="text-5xl text-center" href="/">
           &lt;
-          <span className="font-playwrite font-black text-gradient-primary from-white">
+          <span className="font-playwrite font-black text-gradient-primary">
             Rhed
           </span>{" "}
           /&gt;
@@ -183,33 +183,10 @@ function ModeToggle() {
 
 export default function Home() {
   const { videos, fetchVideos } = useTwitch();
-  // const [videos, setVideos] = useState<TwitchVideo[]>([]);
 
   useEffect(() => {
     fetchVideos();
   }, []);
-
-  // useEffect(() => {
-  //   async function fetchVideos() {
-  //     try {
-  //       const response = await fetch(
-  //         `https://api.twitch.tv/helix/videos?user_id=${process.env.NEXT_PUBLIC_TWITCH_USER_ID}&first=3`,
-  //         {
-  //           headers: {
-  //             'Client-ID': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
-  //             'Authorization': `Bearer ${process.env.NEXT_PUBLIC_TWITCH_OAUTH_TOKEN}`,
-  //           },
-  //         }
-  //       );
-  //       const data = await response.json();
-  //       setVideos(data.data || []);
-  //     } catch (error) {
-  //       console.error('Failed to fetch videos:', error);
-  //     }
-  //   }
-
-  //   fetchVideos();
-  // }, []);
 
   const widgets = [
     { href: "/chat", name: "Chat" },
@@ -226,11 +203,11 @@ export default function Home() {
         <SidebarTrigger />
         <div className="w-full h-full md:flex md:flex-col">
           {/* Header */}
-          <header className="hidden px-8 py-5 bg-gradient-to-b from-[rgba(0,0,0,0.34)] to-transparent md:inline">
+          <header className="hidden px-8 py-5 bg-gradient-to-b from-fade to-transparent md:inline">
             <div className="md:flex md:flex-row md:items-center md:justify-between">
               <Link className="text-3xl" href="/">
                 &lt;
-                <span className="font-black font-playwrite text-gradient-primary from-white">
+                <span className="font-black font-playwrite text-gradient-primary">
                   Rhed
                 </span>{" "}
                 /&gt;
@@ -248,7 +225,7 @@ export default function Home() {
                     </Button>
                   </DropdownMenuTrigger>
 
-                  <DropdownMenuContent className="w-32 bg-sidebar navbar-dropdown-animation">
+                  <DropdownMenuContent className="w-32 bg-rhed-background navbar-dropdown-animation">
                     {widgets.map((widget) => (
                       <DropdownMenuItem
                         className="transition-all ease-in-out hover:font-bold"
@@ -321,7 +298,7 @@ export default function Home() {
                     <h3 className="text-lg font-semibold line-clamp-2">
                       {video.title}
                     </h3>
-                    <p className="text-sm text-gray-500">{video.duration}</p>
+                    <p className="text-sm text-rhed-accent">{video.duration}</p>
                   </div>
                 ))}
               </div>
@@ -329,7 +306,7 @@ export default function Home() {
           </main>
 
           {/* Footer */}
-          <footer className="hidden px-5 py-3 bg-gradient-to-t from-[rgba(0,0,0,0.76)] to-transparent md:h-auto md:flex md:items-center md:justify-center">
+          <footer className="hidden px-5 py-3 bg-gradient-to-t from-fade to-transparent md:h-auto md:flex md:items-center md:justify-center">
             <div className="text-center">
               <p className="text-base">&copy; 2025 Rhamsez Thevenin</p>
             </div>
