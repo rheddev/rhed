@@ -37,6 +37,70 @@ const fadeOut = (audio: HTMLAudioElement, duration = 10000) => {
   return fadeTimer;
 };
 
+const Ellipsis = ({
+  radius,
+  strokeWidth,
+  className,
+}: {
+  radius: number;
+  strokeWidth: number;
+  className?: string;
+}) => {
+  const size = (radius + strokeWidth) * 2;
+
+  return (
+    <svg
+      className={className}
+      width={`${size}vw`}
+      height={`${size}vw`}
+      viewBox={`0 0 ${size}vw ${size}vw`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx={`${radius + strokeWidth}vw`}
+        cy={`${radius + strokeWidth}vw`}
+        r={`${radius}vw`}
+        stroke="white"
+        strokeWidth={`${strokeWidth}vw`}
+      />
+    </svg>
+  );
+};
+
+const Hand = ({
+  width,
+  height,
+  className,
+  style,
+}: {
+  width: number;
+  height: number;
+  className: string;
+  style: React.CSSProperties;
+}) => {
+  return (
+    <svg
+      style={style}
+      className={className}
+      width={`${width}vw`}
+      height={`${height}vw`}
+      viewBox={`0 0 ${width}vw ${height}vw`}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        x1={`${width / 2}vw`}
+        y1={`${height}vw`}
+        x2={`${width / 2}vw`}
+        y2="0"
+        stroke="white"
+        strokeWidth={`${width}vw`}
+      />
+    </svg>
+  );
+};
+
 interface ClockProps {
   seconds: number;
 }
@@ -48,30 +112,30 @@ function Clock({ seconds }: ClockProps) {
 
   return (
     <div className="relative w-fit">
-      <img src="Ellipse 1.svg" alt="Circle" />
-      <img
+      <Ellipsis radius={10} strokeWidth={0.1} />
+      <Hand
         style={{
           transform: `rotate(${hoursDegree}deg)`,
         }}
         className={`absolute bottom-1/2 left-1/2 origin-bottom`}
-        src="Hours.svg"
-        alt="Circle"
+        width={0.1}
+        height={5}
       />
-      <img
+      <Hand
         style={{
           transform: `rotate(${minutesDegree}deg)`,
         }}
         className={`absolute bottom-1/2 left-1/2 origin-bottom`}
-        src="Minutes.svg"
-        alt="Circle"
+        width={0.1}
+        height={7}
       />
-      <img
+      <Hand
         style={{
           transform: `rotate(${secondsDegree}deg)`,
         }}
         className={`absolute bottom-1/2 left-1/2 origin-bottom`}
-        src="Seconds.svg"
-        alt="Circle"
+        width={0.1}
+        height={9}
       />
     </div>
   );
@@ -133,13 +197,24 @@ function Pomodoro({ pomodoro, audio }: PomodoroProps) {
       denominator = 25 * INTERVAL;
       cycle = Math.floor(pomodoro / (30 * INTERVAL)) + 1;
     }
-  
+
     return (
       <div className="w-[34vw] space-y-3">
-        <h1 className="text-center">
+        <h1 className="text-start">
           {title} {cycle && cycle > 0 ? <span>#{cycle}</span> : null}
         </h1>
         <ProgressBar numerator={numerator} denominator={denominator} />
+        <div className="text-end">
+          {Math.floor(numerator / 60).toLocaleString("en-US", {
+            minimumIntegerDigits: 2,
+            useGrouping: false,
+          })}
+          :
+          {Math.floor(numerator % 60).toLocaleString("en-US", {
+            minimumIntegerDigits: 2,
+            useGrouping: false,
+          })}
+        </div>
       </div>
     );
   }
@@ -166,7 +241,7 @@ export default function PomodoroPage() {
 
   useEffect(() => {
     setAudio(new Audio("white_noise.mp3"));
-  }, [])
+  }, []);
 
   useEffect(() => {
     // Start with volume 0
@@ -174,9 +249,9 @@ export default function PomodoroPage() {
       audio.volume = 0;
       audio.loop = true;
       audio.play();
-  
+
       const inTimer = fadeIn(audio);
-  
+
       // Cleanup function to clear interval if component unmounts
       return () => clearInterval(inTimer);
     }
@@ -200,7 +275,7 @@ export default function PomodoroPage() {
 
     updateTime();
 
-    const intervalId = setInterval(updateTime, 1000);
+    const intervalId = setInterval(updateTime, 10);
 
     return () => clearInterval(intervalId);
   }, []);
