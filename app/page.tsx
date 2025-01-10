@@ -194,6 +194,7 @@ export default function Home() {
     { href: "/glow", name: "Glow" },
     { href: "/outrun", name: "Outrun" },
     { href: "/now-playing", name: "Now Playing" },
+    { href: "/pomodoro", name: "24/7 Pomodoro" },
   ];
 
   return (
