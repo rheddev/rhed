@@ -104,7 +104,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
 interface PomodoroProps {
   pomodoro: number;
-  audio: HTMLAudioElement;
+  audio: HTMLAudioElement | null;
 }
 
 function Pomodoro({ pomodoro, audio }: PomodoroProps) {
@@ -113,34 +113,37 @@ function Pomodoro({ pomodoro, audio }: PomodoroProps) {
   let denominator: number;
   let cycle: number = 0;
 
-  if (pomodoro >= 115 * INTERVAL) {
-    fadeOut(audio);
-    title = "Long Break";
-    numerator = pomodoro - 115 * INTERVAL;
-    denominator = 15 * INTERVAL;
-    cycle = 0;
-  } else if (pomodoro % (30 * INTERVAL) >= 25 * INTERVAL) {
-    fadeOut(audio);
-    title = "Short Break";
-    numerator = (pomodoro % (30 * INTERVAL)) - 25 * INTERVAL;
-    denominator = 5 * INTERVAL;
-    cycle = Math.floor(pomodoro / (30 * INTERVAL)) + 1;
-  } else {
-    fadeIn(audio);
-    title = "Work time";
-    numerator = pomodoro % (30 * INTERVAL);
-    denominator = 25 * INTERVAL;
-    cycle = Math.floor(pomodoro / (30 * INTERVAL)) + 1;
+  if (audio) {
+    if (pomodoro >= 115 * INTERVAL) {
+      fadeOut(audio);
+      title = "Long Break";
+      numerator = pomodoro - 115 * INTERVAL;
+      denominator = 15 * INTERVAL;
+      cycle = 0;
+    } else if (pomodoro % (30 * INTERVAL) >= 25 * INTERVAL) {
+      fadeOut(audio);
+      title = "Short Break";
+      numerator = (pomodoro % (30 * INTERVAL)) - 25 * INTERVAL;
+      denominator = 5 * INTERVAL;
+      cycle = Math.floor(pomodoro / (30 * INTERVAL)) + 1;
+    } else {
+      fadeIn(audio);
+      title = "Work time";
+      numerator = pomodoro % (30 * INTERVAL);
+      denominator = 25 * INTERVAL;
+      cycle = Math.floor(pomodoro / (30 * INTERVAL)) + 1;
+    }
+  
+    return (
+      <div className="w-[34vw] space-y-3">
+        <h1 className="text-center">
+          {title} {cycle && cycle > 0 ? <span>#{cycle}</span> : null}
+        </h1>
+        <ProgressBar numerator={numerator} denominator={denominator} />
+      </div>
+    );
   }
-
-  return (
-    <div className="w-[34vw] space-y-3">
-      <h1 className="text-center">
-        {title} {cycle && cycle > 0 ? <span>#{cycle}</span> : null}
-      </h1>
-      <ProgressBar numerator={numerator} denominator={denominator} />
-    </div>
-  );
+  return null;
 }
 
 function convertUTCDateToLocalDate(date: Date) {
@@ -159,18 +162,24 @@ function convertUTCDateToLocalDate(date: Date) {
 export default function PomodoroPage() {
   const [elapsed, setElapsed] = useState(0);
   const [pomodoro, setPomodoro] = useState(0);
-  const [audio] = useState(new Audio("white_noise.mp3"));
+  const [audio, setAudio] = useState(null as HTMLAudioElement | null);
+
+  useEffect(() => {
+    setAudio(new Audio("white_noise.mp3"));
+  }, [])
 
   useEffect(() => {
     // Start with volume 0
-    audio.volume = 0;
-    audio.loop = true;
-    audio.play();
-
-    const inTimer = fadeIn(audio);
-
-    // Cleanup function to clear interval if component unmounts
-    return () => clearInterval(inTimer);
+    if (audio) {
+      audio.volume = 0;
+      audio.loop = true;
+      audio.play();
+  
+      const inTimer = fadeIn(audio);
+  
+      // Cleanup function to clear interval if component unmounts
+      return () => clearInterval(inTimer);
+    }
   }, [audio]);
 
   useEffect(() => {
