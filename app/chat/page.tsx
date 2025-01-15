@@ -119,10 +119,10 @@ const ChatPage: React.FC = () => {
         {messages.map((message, index) => (
           <div key={index} id={index.toString()} className="break-words text-shadow text-2xl message-animation">
             <span
+              className={`font-bold ${message.displayName === "RhedDev" ? `text-glow` : ``}`}
               style={{
-                color: getColorGradient(messagePositions[index] || 0, '#AA0000', isValidHexColor(message.color) ? message.color : "#AA0000" ) // Top to bottom
+                color: message.displayName !== "RhedDev" ? getColorGradient(messagePositions[index] || 0, '#AA0000', isValidHexColor(message.color) ? message.color : "#AA0000" ) : `` // Top to bottom
               }}
-              className="font-bold"
             >
               {message.displayName}:
             </span>{' '}
