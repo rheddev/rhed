@@ -115,7 +115,7 @@ const ChatPage: React.FC = () => {
 
   return (
     <div className="h-screen w-screen flex items-end justify-start">
-      <div>
+      <div className='ml-3'>
         {messages.map((message, index) => (
           <div key={index} id={index.toString()} className="break-words text-shadow text-2xl message-animation">
             <span
