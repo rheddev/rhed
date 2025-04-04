@@ -389,7 +389,7 @@ export default function Home() {
                   /&gt;
                 </h3>
                 <p className="text-base sm:text-lg">
-                  Streaming code, games, and creative content
+                  #WAGMI
                 </p>
               </div>
               <div>
