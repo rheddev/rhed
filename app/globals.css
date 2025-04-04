@@ -6,40 +6,57 @@
 
 @layer base {
   :root {
-    --color-primary-from: #aa0000;
-    --color-primary-to: #550000;
+    /* Primary color palette */
+    --color-primary: #aa0000;
+    --color-primary-light: #cc3333;
+    --color-primary-dark: #770000;
+    --color-accent: #dd6644;
+    
+    /* Sidebar variables */
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-foreground: 0 50% 20%;
+    --sidebar-primary: 0 80% 35%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 0 20% 95%;
+    --sidebar-accent-foreground: 0 80% 10%;
+    --sidebar-border: 0 20% 90%;
+    --sidebar-ring: 0 80% 50%;
 
-    --rhed-background: #fdd;
-    --rhed-foreground: #100;
-    --rhed-accent: #733;
-    --fade: #fee;
+    --rhed-background: #ffbfbf;
+    --rhed-foreground: #3f0000;
+    --rhed-accent: #cc6655;
+    --fade: #ffefef;
+    
+    /* Add the new mobile sidebar background variables */
+    --sidebar-bg-light: #ffbfbf;
+    --sidebar-bg-dark: #3f0000;
   }
+  
   .dark {
-    /* --sidebar-background: 240 5.9% 10%; */
+    /* Dark mode colors */
+    --color-primary: #aa0000;
+    --color-primary-light: #dd0000;
+    --color-primary-dark: #550000;
+    --color-accent: #ff6633;
+    
+    /* Sidebar variables */
     --sidebar-background: 0 100% 7%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-foreground: 0 30% 90%;
+    --sidebar-primary: 0 80% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 0 20% 15%;
+    --sidebar-accent-foreground: 0 30% 90%;
+    --sidebar-border: 0 20% 15%;
+    --sidebar-ring: 0 70% 50%;
 
-    --rhed-background: #200;
-    --rhed-foreground: #fee;
-    --rhed-accent: #b77;
-    --fade: #100;
+    --rhed-background: #3f0000;
+    --rhed-foreground: #ffefef;
+    --rhed-accent: #cc4433;
+    --fade: #300;
   }
 }
 
+/* Animations */
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -51,21 +68,50 @@
   }
 }
 
-@keyframes navbar {
+@keyframes slide-in-from-left {
   from {
     opacity: 0;
-    transform: translateY(-20px) scale(0.8);
+    transform: translateX(-20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateX(0);
   }
 }
 
-@keyframes sidebar {
+@keyframes zoom-in {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0% { text-shadow: 0 0 5px rgba(170, 0, 0, 0.5), 0 0 10px rgba(170, 0, 0, 0.3); }
+  50% { text-shadow: 0 0 15px rgba(170, 0, 0, 0.7), 0 0 20px rgba(170, 0, 0, 0.5); }
+  100% { text-shadow: 0 0 5px rgba(170, 0, 0, 0.5), 0 0 10px rgba(170, 0, 0, 0.3); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -73,144 +119,81 @@
   }
 }
 
-@keyframes glowText {
+/* New minimalist message animation */
+.message-animation {
+  animation: fadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
   from {
-      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 3px #eeb4b4, 0 0 4px #dd9090, 0 0 5px #cc6c6c, 0 0 6px #bb4848, 0 0 7px #aa2424;
+    opacity: 0;
+    transform: translateY(5px);
   }
-
   to {
-      text-shadow: 0 0 2px #fff, 0 0 4px #eeb4b4, 0 0 6px #dd9090, 0 0 8px #cc6c6c, 0 0 10px #bb4848, 0 0 12px #aa2424, 0 0 14px #a00;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes rotateGlowText {
-  0% {
-    text-shadow: 
-      0 calc(-1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(-1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff4848,
-      0 calc(-1/2 * var(--glow-intensity)) var(--glow-intensity) #ff2424,
-      calc(1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff7043,
-      calc(1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff5722,
-      calc(-1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(-1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff7043,
-      calc(-1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff5722,
-      0 calc(1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ffa500,
-      0 calc(1/2 * var(--glow-intensity)) var(--glow-intensity) #ff8c00;
-  }
-  
-  25% {
-    text-shadow: 
-      calc(1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff4848,
-      calc(1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff2424,
-      0 calc(1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff7043,
-      0 calc(1/2 * var(--glow-intensity)) var(--glow-intensity) #ff5722,
-      0 calc(-1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(-1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff7043,
-      0 calc(-1/2 * var(--glow-intensity)) var(--glow-intensity) #ff5722,
-      calc(-1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(-1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ffa500,
-      calc(-1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff8c00;
-  }
-  
-  50% {
-    text-shadow: 
-      0 calc(1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff4848,
-      0 calc(1/2 * var(--glow-intensity)) var(--glow-intensity) #ff2424,
-      calc(-1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(-1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff7043,
-      calc(-1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff5722,
-      calc(1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff7043,
-      calc(1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff5722,
-      0 calc(-1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(-1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ffa500,
-      0 calc(-1/2 * var(--glow-intensity)) var(--glow-intensity) #ff8c00;
-  }
-  
-  75% {
-    text-shadow: 
-      calc(-1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(-1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff4848,
-      calc(-1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff2424,
-      0 calc(-1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(-1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff7043,
-      0 calc(-1/2 * var(--glow-intensity)) var(--glow-intensity) #ff5722,
-      0 calc(1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff7043,
-      0 calc(1/2 * var(--glow-intensity)) var(--glow-intensity) #ff5722,
-      calc(1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ffa500,
-      calc(1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff8c00;
-  }
-  
-  100% {
-    text-shadow: 
-      0 calc(-1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(-1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ff4848,
-      0 calc(-1/2 * var(--glow-intensity)) var(--glow-intensity) #ff2424,
-      calc(1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff7043,
-      calc(1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff5722,
-      calc(-1/6 * var(--glow-intensity)) 0 calc(1/3 * var(--glow-intensity)) #fff,
-      calc(-1/3 * var(--glow-intensity)) 0 calc(2/3 * var(--glow-intensity)) #ff7043,
-      calc(-1/2 * var(--glow-intensity)) 0 var(--glow-intensity) #ff5722,
-      0 calc(1/6 * var(--glow-intensity)) calc(1/3 * var(--glow-intensity)) #fff,
-      0 calc(1/3 * var(--glow-intensity)) calc(2/3 * var(--glow-intensity)) #ffa500,
-      0 calc(1/2 * var(--glow-intensity)) var(--glow-intensity) #ff8c00;
-  }
+/* Custom utility classes */
+.bg-wood {
+  @apply bg-repeat bg-center bg-contain;
+  background-image: url('/wood_light.jpg');
 }
 
-@layer utilities {
-  .text-shadow {
-    text-shadow: 0px 0px 0.5rem black;
-  }
+.dark .bg-wood {
+  @apply bg-repeat bg-center bg-contain;
+  background-image: url('/wood_dark.jpg');
+}
 
-  .message-animation {
-    animation: slide-up 0.25s ease-out forwards;
-  }
+.glass {
+  @apply backdrop-blur-md bg-white/10 border border-white/20 dark:bg-black/20 dark:border-white/10 shadow-lg;
+}
 
-  .navbar-dropdown-animation {
-    animation: navbar 0.1s ease-in-out forwards;
-  }
+.red-glass {
+  background: rgba(255, 191, 191, 0.0625);
+  backdrop-filter: blur(0.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(170, 0, 0, 0.25);
+}
 
-  .sidebar-dropdown-animation {
-    animation: sidebar 0.1s ease-in-out forwards;
-  }
+.dark .red-glass {
+  background: rgba(63, 0, 0, 0.0625);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
 
-  .text-gradient-primary {
-    padding: 0.2em;
-    margin: -0.2em;
+.text-glow {
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+  animation: none;
+}
 
-    color: transparent;
-    background-clip: text;
-    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+.floating {
+  animation: float 6s infinite ease-in-out;
+}
 
-    --tw-gradient-from: var(--color-primary-from) var(--tw-gradient-from-position);
-    --tw-gradient-to: var(--color-primary-from) var(--tw-gradient-to-position);
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+.gradient-red {
+  background: linear-gradient(-45deg, var(--color-primary-light), var(--color-primary), var(--color-primary-dark));
+  background-size: 300% 300%;
+  animation: gradient-shift 15s ease infinite;
+}
 
-    --tw-gradient-to: var(--color-primary-to) var(--tw-gradient-to-position);
-  }
+.text-gradient-primary {
+  @apply text-red-800;
+  background: linear-gradient(90deg, #ff0000, #aa0000);
+  background-clip: text;
+  color: transparent;
+}
 
-  .text-glow {
-    color: white;
-    animation: glowText 3.33s ease-in-out infinite alternate;
-  }
+.navbar-dropdown-animation {
+  @apply origin-top;
+  animation: zoom-in 0.2s ease-out forwards;
+}
 
-  .text-glow-rotate {
-    color: white;
-    animation: rotateGlowText 5s linear infinite;
-    --glow-intensity: 13px;
-  }
-
-  .blend {
-    mix-blend-mode: screen;
-  }
+.sidebar-dropdown-animation {
+  @apply origin-left;
+  animation: slide-in-from-left 0.2s ease-out forwards;
 }
 
 body {
@@ -219,4 +202,367 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
+}
+
+/* Additional effects for enhanced design */
+.leaf-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-8.285 0-15-6.715-15-15s6.715-15 15-15 15 6.715 15 15-6.715 15-15 15zm0-29c-7.732 0-14 6.268-14 14s6.268 14 14 14 14-6.268 14-14-6.268-14-14-14z' fill='%23aa0000' fill-opacity='0.07' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+.shadow-red {
+  box-shadow: 0 5px 20px -5px rgba(170, 0, 0, 0.4);
+}
+
+.border-gradient {
+  border: 1px solid transparent;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  background-image: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
+    linear-gradient(135deg, rgba(170, 0, 0, 0.5), rgba(170, 0, 0, 0.2), rgba(200, 50, 0, 0.3));
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 15px rgba(170, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.noise-bg {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+  opacity: 0.05;
+}
+
+/* Add these classes to your globals.css file */
+
+/* After your existing custom utility classes */
+.mobile-sidebar {
+  @apply backdrop-blur-md border-r border-red-500/20;
+  background-color: rgba(255, 191, 191, 0.8); /* Light mode with transparency */
+}
+
+.dark .mobile-sidebar {
+  @apply backdrop-blur-md border-r border-red-500/20;
+  background-color: rgba(63, 0, 0, 0.8); /* Dark mode with transparency */
+}
+
+/* Ensure the SheetContent doesn't show the default background */
+.mobile-sidebar-content {
+  background: transparent !important;
+  box-shadow: -10px 0 30px rgba(170, 0, 0, 0.2);
+}
+
+/* Match the sidebar's appearance */
+.mobile-sidebar-inner {
+  @apply backdrop-blur-md red-glass bg-opacity-95 h-full;
+}
+
+/* Add this to target the mobile sidebar sheet */
+
+/* Target the SheetContent specifically for the mobile sidebar */
+[data-sidebar="sidebar"][data-mobile="true"] {
+  background-color: transparent !important;
+}
+
+[data-sidebar="sidebar"][data-mobile="true"] > div {
+  background-color: rgba(255, 191, 191, 0.9); /* Light mode with transparency */
+  backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(170, 0, 0, 0.2);
+  box-shadow: -5px 0 25px rgba(170, 0, 0, 0.15);
+}
+
+.dark [data-sidebar="sidebar"][data-mobile="true"] > div {
+  background-color: rgba(63, 0, 0, 0.9); /* Dark mode with transparency */
+  backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(170, 0, 0, 0.3);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Add red glass texture */
+[data-sidebar="sidebar"][data-mobile="true"] > div::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-8.285 0-15-6.715-15-15s6.715-15 15-15 15 6.715 15 15-6.715 15-15 15zm0-29c-7.732 0-14 6.268-14 14s6.268 14 14 14 14-6.268 14-14-6.268-14-14-14z' fill='%23aa0000' fill-opacity='0.07' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Add these new classes for the chat widget */
+.chat-container {
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(to bottom, rgba(20, 5, 5, 0.6), rgba(30, 0, 0, 0.75));
+  border: 1px solid rgba(255, 60, 60, 0.15);
+  border-radius: 8px;
+}
+
+.message-animation {
+  animation: fadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.chat-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.text-glow {
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+  animation: none;
+}
+
+/* Enhanced cyber glassmorphism */
+.cyber-glass {
+  background: rgba(20, 5, 5, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 60, 60, 0.15);
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.15);
+}
+
+/* Neon shadows */
+.shadow-neon-red {
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.2);
+}
+
+.shadow-neon-purple {
+  box-shadow: 0 0 8px rgba(128, 0, 255, 0.2);
+}
+
+/* Cyberpunk text gradient */
+.text-gradient-cyber {
+  background: linear-gradient(90deg, #ff3d00, #ff0077);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 60, 0.5));
+}
+
+/* Cyber badges */
+.cyber-badge {
+  display: inline-flex;
+  padding: 0px 4px;
+  border-radius: 2px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 18px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+/* Cyber button */
+.cyber-button {
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 1px;
+  font-family: 'Roboto', sans-serif;
+  clip-path: polygon(
+    0 5px, 
+    5px 0, 
+    calc(100% - 5px) 0, 
+    100% 5px, 
+    100% calc(100% - 5px), 
+    calc(100% - 5px) 100%, 
+    5px 100%, 
+    0% calc(100% - 5px)
+  );
+}
+
+.cyber-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shine 2s infinite;
+}
+
+/* Add this after your cyber-button class */
+.rhed-button {
+  @apply red-glass transition-all duration-300 hover:scale-105 shadow-red;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.rhed-button:focus {
+  @apply outline-none ring-2 ring-red-500/50 ring-offset-1 ring-offset-red-900/10;
+}
+
+/* Cyber highlight for first messages */
+.cyber-highlight {
+  position: relative;
+  border-left: 2px solid #ffcc00;
+  box-shadow: inset 0 0 5px rgba(255, 204, 0, 0.3);
+}
+
+.cyber-highlight::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: linear-gradient(to bottom, #ffcc00, transparent);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Message animation */
+.message-animation {
+  animation: fadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+/* Cyber Grid */
+.cyber-grid {
+  background-image: 
+    linear-gradient(0deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+}
+
+/* Glitch effect */
+.glitch-container {
+  position: relative;
+}
+
+.glitch-text {
+  animation: none;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  display: none;
+}
+
+/* Text shadow for cyber aesthetic */
+.text-shadow-cyber {
+  text-shadow: none;
+}
+
+/* Scrollbar styling */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thumb-red-500\/30::-webkit-scrollbar-thumb {
+  background-color: rgba(239, 68, 68, 0.3);
+  border-radius: 2px;
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Glow effects for icons */
+.filter.drop-shadow-glow-purple {
+  filter: drop-shadow(0 0 3px rgba(128, 0, 255, 0.7));
+}
+
+/* Add to your existing styles */
+
+.emote-hover:hover {
+  transform: scale(1.15);
+  transition: transform 0.2s ease;
+}
+
+/* Improved badge styling */
+.cyber-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 4px;
+  border-radius: 2px;
+  font-family: 'Roboto', sans-serif;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 18px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* Fix spacing between username and message */
+.font-bold + .text-white {
+  margin-left: 2px;
+}
+
+/* Improve chat message styling */
+.message-content {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
+  flex-wrap: wrap;
+}
+
+/* Ensure flex items align properly */
+.items-center > * {
+  max-height: 100%;
+}
+
+/* Fix text wrapping in chat messages */
+.flex-wrap-anywhere {
+  display: block;
+  word-break: break-word;
+}
+
+/* Chat line for natural text flow */
+.chat-line {
+  display: block;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+/* Username mentions styling */
+.mention {
+  display: inline-block;
+  border: 1px solid rgba(255, 100, 100, 0.4);
+  border-radius: 0.25rem;
+  padding: 0 3px;
+  margin: 0 1px;
+  background-color: rgba(255, 100, 100, 0.1);
+}
+
+/* Add this near your other shadow classes */
+.video-glow {
+  box-shadow: 0 0 20px rgba(170, 0, 0, 0.25), 
+              0 0 40px rgba(170, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.video-glow:hover {
+  box-shadow: 0 0 25px rgba(170, 0, 0, 0.35), 
+              0 0 50px rgba(170, 0, 0, 0.25);
+}
+
+.dark .video-glow {
+  box-shadow: 0 0 20px rgba(120, 0, 0, 0.35), 
+              0 0 40px rgba(120, 0, 0, 0.25);
+}
+
+.dark .video-glow:hover {
+  box-shadow: 0 0 30px rgba(170, 0, 0, 0.45), 
+              0 0 60px rgba(170, 0, 0, 0.35);
 }

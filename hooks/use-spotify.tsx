@@ -118,7 +118,7 @@ export function useSpotify(): UseSpotifyReturn {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    const SECONDS = 5;
+    const SECONDS = 2;
     if (isAuthenticated) {
       interval = setInterval(refreshCurrentlyPlaying, SECONDS * 1000);
     }

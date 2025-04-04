@@ -89,12 +89,82 @@ export function useTwitch() {
           return;
         }
 
-        const regex =
-          /color=(?:([^;]+)|);.*display-name=([^;]+);.*?PRIVMSG #\w+ :(.*)/;
-        const match = message.match(regex);
-        if (match) {
-          const [, color, displayName, msg] = match;
-          setMessages((prev) => [...prev, { color, displayName, msg }]);
+        console.log(message);
+
+        // Skip non-PRIVMSG messages
+        if (!message.includes("PRIVMSG")) {
+          return;
+        }
+
+        try {
+          // Parse tags
+          const tagsPart = message.split(' :')[0];
+          if (!tagsPart.startsWith('@')) return;
+          
+          const tags: Record<string, string> = {};
+          tagsPart.substring(1).split(';').forEach(tag => {
+            const [key, value] = tag.split('=');
+            tags[key] = value;
+          });
+          
+          // Extract message content
+          const msgParts = message.split(' PRIVMSG #');
+          if (msgParts.length < 2) return;
+          
+          const channelMsgParts = msgParts[1].split(' :');
+          if (channelMsgParts.length < 2) return;
+          
+          const msg = channelMsgParts[1];
+          
+          // Process badges
+          const badges: string[] = tags.badges ? tags.badges.split(',') : [];
+          const isBroadcaster = badges.some(badge => badge.startsWith('broadcaster'));
+          const isMod = tags.mod === '1' || badges.some(badge => badge.startsWith('moderator'));
+          const isSubscriber = tags.subscriber === '1' || badges.some(badge => badge.startsWith('subscriber'));
+          const isTurbo = tags.turbo === '1';
+          const isFirstMsg = tags['first-msg'] === '1';
+          
+          // Process emotes
+          const emotes: {
+            id: string;
+            positions: { start: number; end: number }[];
+          }[] = [];
+          
+          if (tags.emotes && tags.emotes !== '') {
+            const emoteGroups = tags.emotes.split('/');
+            emoteGroups.forEach(group => {
+              if (!group) return;
+              
+              const [emoteId, positionsList] = group.split(':');
+              const positions = positionsList.split(',').map(position => {
+                const [start, end] = position.split('-').map(Number);
+                return { start, end };
+              });
+              
+              emotes.push({ id: emoteId, positions });
+            });
+          }
+          
+          // Create message object
+          const chatMessage: TwitchChatMessage = {
+            color: tags.color || '#FFFFFF',
+            displayName: tags['display-name'] || 'Anonymous',
+            msg,
+            badges,
+            emotes,
+            userId: tags['user-id'] || '',
+            messageId: tags.id || '',
+            isMod,
+            isBroadcaster,
+            isSubscriber,
+            isTurbo,
+            isFirstMsg,
+            timestamp: tags['tmi-sent-ts'] ? parseInt(tags['tmi-sent-ts'], 10) : Date.now(),
+          };
+          
+          setMessages((prev) => [...prev, chatMessage]);
+        } catch (error) {
+          console.error("Error parsing Twitch message:", error);
         }
       };
 

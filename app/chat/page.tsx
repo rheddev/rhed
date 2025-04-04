@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useTwitch } from '@/hooks/use-twitch';
+import EmoteMessage from '@/components/EmoteMessage';
 
 const ChatPage: React.FC = () => {
   const { messages, isAuthenticated, error, login, startChatConnection, closeChatConnection } = useTwitch();
@@ -39,7 +40,7 @@ const ChatPage: React.FC = () => {
     const updatePositions = () => {
       setPageHeight(window.innerHeight);
       messages.forEach((_, index) => {
-        const element = document.getElementById(index.toString());
+        const element = document.getElementById(`chat-msg-${index}`);
         if (element) {
           const rect = element.getBoundingClientRect();
           setMessagePositions(prev => ({ ...prev, [index]: rect.y }));
@@ -52,22 +53,25 @@ const ChatPage: React.FC = () => {
     return () => window.removeEventListener('resize', updatePositions);
   }, [messages]);
 
+  function isValidHexColor(color: string): boolean {
+    const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
+    return hexColorRegex.test(color);
+  }
+
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">Twitch Chat Viewer</h1>
-          <p className="text-rhed-accent text-lg">
-            Connect to view your Twitch chat
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen space-y-4 cyber-glass p-8">
+        <h1 className="text-4xl font-bold text-red-500">Twitch Chat</h1>
+        <p className="text-red-300 text-lg">
+          Connect to display your channel&apos;s chat
+        </p>
         <button
           onClick={login}
-          className="flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-full font-semibold 
-              hover:bg-purple-400 transform hover:scale-105 transition-all duration-300 shadow-lg"
+          className="flex items-center gap-2 px-6 py-3 bg-purple-500/80 text-white rounded-md font-semibold 
+              hover:bg-purple-400 transform hover:scale-105 transition-all duration-300"
         >
           <TwitchLogo />
-          Connect to Twitch
+          <span>CONNECT</span>
         </button>
       </div>
     );
@@ -76,10 +80,10 @@ const ChatPage: React.FC = () => {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 max-w-md w-full">
+        <div className="cyber-glass border border-red-500/30 rounded-lg p-6 max-w-md w-full shadow-neon-red">
           <div className="flex items-center gap-3 mb-4">
             <svg
-              className="w-6 h-6 text-red-500"
+              className="w-6 h-6 text-red-500 animate-pulse"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -91,45 +95,76 @@ const ChatPage: React.FC = () => {
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h2 className="text-xl font-semibold text-red-500">
-              Error Occurred
+            <h2 className="text-xl font-semibold text-red-500 cyber-text">
+              SYSTEM ERROR
             </h2>
           </div>
-          <p className="text-gray-400">{error}</p>
+          <p className="text-gray-400 font-mono">{error}</p>
           <button
             onClick={login}
-            className="mt-6 w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-400 
-                transition-colors duration-300 font-medium"
+            className="mt-6 w-full px-4 py-2 bg-red-500/80 text-white rounded-md hover:bg-red-400 
+                transition-colors duration-300 font-medium cyber-button shadow-neon-red"
           >
-            Try Again
+            RECONNECT
           </button>
         </div>
       </div>
     );
   }
 
-  function isValidHexColor(color: string): boolean {
-    const hexColorRegex = /^#[0-9A-Fa-f]{6}$/;
-    return hexColorRegex.test(color);
-  }
-
   return (
-    <div className="h-screen w-screen flex items-end justify-start">
-      <div className='ml-3'>
-        {messages.map((message, index) => (
-          <div key={index} id={index.toString()} className="break-words text-shadow text-2xl message-animation">
-            <span
-              className={`font-bold ${message.displayName === "RhedDev" ? `text-glow` : ``}`}
-              style={{
-                color: message.displayName !== "RhedDev" ? getColorGradient(messagePositions[index] || 0, '#AA0000', isValidHexColor(message.color) ? message.color : "#AA0000" ) : `` // Top to bottom
-              }}
+    <div className="h-screen w-screen flex items-end justify-start bg-transparent overflow-hidden">
+      <div className="cyber-grid absolute inset-0 pointer-events-none"></div>
+      {messages.length > 0 && (
+        <div className="chat-container mb-4 mx-4 p-4 rounded-lg w-[calc(100vw-2rem)] overflow-y-auto max-h-[80vh] scrollbar-thin scrollbar-thumb-red-500/30 scrollbar-track-transparent">
+          {messages.map((message, index) => (
+            <div 
+              key={message.messageId || index} 
+              id={`chat-msg-${index}`} 
+              className={`py-2 message-animation ${message.isFirstMsg ? 'border-l-2 border-yellow-500/50 pl-2' : ''}`}
             >
-              {message.displayName}:
-            </span>{' '}
-            <span className="text-white">{message.msg}</span>
-          </div>
-        ))}
-      </div>
+              <div className="chat-line">
+                {/* Badge section - uses inline-block */}
+                {message.badges && message.badges.length > 0 && (
+                  <span className="inline-block mr-1 text-white">
+                    {message.isBroadcaster && (
+                      <span className="cyber-badge bg-red-500/70 text-[10px] font-bold">HOST</span>
+                    )}
+                    {message.isMod && (
+                      <span className="cyber-badge bg-green-500/70 text-[10px] font-bold">MOD</span>
+                    )}
+                    {message.isSubscriber && (
+                      <span className="cyber-badge bg-purple-500/70 text-[10px] font-bold">SUB</span>
+                    )}
+                  </span>
+                )}
+                
+                {/* First-time chatter indicator */}
+                {message.isFirstMsg && (
+                  <span className="cyber-badge bg-yellow-500/70 text-[10px] text-black inline-block mr-1">
+                    FIRST
+                  </span>
+                )}
+
+                {/* Username - also inline-block */}
+                <span
+                  className={`font-bold inline-block mr-1 ${message.badges && message.badges.length > 0 ? 'badge-user-name' : ''}`}
+                  style={{
+                    color: !message.isBroadcaster 
+                      ? getColorGradient(messagePositions[index] || 0, '#FF2222', isValidHexColor(message.color) ? message.color : "#FF2222") 
+                      : "#FF2222"
+                  }}
+                >
+                  {message.displayName}:
+                </span>
+
+                {/* Message with emotes - plain text flow */}
+                <EmoteMessage message={message} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -141,8 +176,9 @@ const TwitchLogo = () => (
     height="24"
     viewBox="0 0 24 24"
     fill="currentColor"
+    className="filter drop-shadow-glow-purple"
   >
-    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
   </svg>
 );
 

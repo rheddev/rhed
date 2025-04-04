@@ -67,6 +67,19 @@ interface TwitchChatMessage {
   color: string;
   displayName: string;
   msg: string;
+  badges: string[];
+  emotes: {
+    id: string;
+    positions: { start: number; end: number }[];
+  }[];
+  userId: string;
+  messageId: string;
+  isMod: boolean;
+  isBroadcaster: boolean;
+  isSubscriber: boolean;
+  isTurbo: boolean;
+  isFirstMsg: boolean;
+  timestamp: number;
 }
 
 interface TwitchUser {

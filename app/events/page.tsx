@@ -98,22 +98,20 @@ export default function EventsPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">
-            Twitch Events Viewer
-          </h1>
-          <p className="text-rhed-accent text-lg">
-            Connect to view your Twitch Events
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen space-y-4 cyber-glass p-8">
+        <h1 className="text-4xl font-bold text-red-500">
+          Twitch Events Viewer
+        </h1>
+        <p className="text-red-300 text-lg">
+          Connect to view your Twitch Events
+        </p>
         <button
           onClick={login}
-          className="flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-full font-semibold 
-              hover:bg-purple-400 transform hover:scale-105 transition-all duration-300 shadow-lg"
+          className="flex items-center gap-2 px-6 py-3 bg-purple-500/80 text-white rounded-md font-semibold 
+              hover:bg-purple-400 transform hover:scale-105 transition-all duration-300"
         >
           <TwitchLogo />
-          Connect to Twitch
+          <span>CONNECT</span>
         </button>
       </div>
     );
@@ -122,10 +120,10 @@ export default function EventsPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 max-w-md w-full">
+        <div className="cyber-glass border border-red-500/30 rounded-lg p-6 max-w-md w-full shadow-neon-red">
           <div className="flex items-center gap-3 mb-4">
             <svg
-              className="w-6 h-6 text-red-500"
+              className="w-6 h-6 text-red-500 animate-pulse"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -137,17 +135,17 @@ export default function EventsPage() {
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h2 className="text-xl font-semibold text-red-500">
-              Error Occurred
+            <h2 className="text-xl font-semibold text-red-500 cyber-text">
+              SYSTEM ERROR
             </h2>
           </div>
-          <p className="text-gray-400">{error}</p>
+          <p className="text-gray-400 font-mono">{error}</p>
           <button
             onClick={login}
-            className="mt-6 w-full px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-400 
-                transition-colors duration-300 font-medium"
+            className="mt-6 w-full px-4 py-2 bg-red-500/80 text-white rounded-md hover:bg-red-400 
+                transition-colors duration-300 font-medium cyber-button shadow-neon-red"
           >
-            Try Again
+            RECONNECT
           </button>
         </div>
       </div>
@@ -181,6 +179,7 @@ const TwitchLogo = () => (
     height="24"
     viewBox="0 0 24 24"
     fill="currentColor"
+    className="filter drop-shadow-glow-purple"
   >
     <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
   </svg>
