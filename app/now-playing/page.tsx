@@ -89,42 +89,45 @@ export default function Home() {
           <div className="cyber-grid absolute inset-0 pointer-events-none rounded-lg opacity-20"></div>
 
           <div className="flex h-full items-center relative z-10">
-            {/* Placeholder for album art - matches main widget dimensions */}
-            <div className="relative aspect-square h-full bg-black/40 rounded-l-lg flex items-center justify-center" />
+            {/* Album art placeholder that matches the main widget */}
+            <div className="relative aspect-square h-full">
+              <div className="h-full aspect-square rounded-l-lg bg-gray-800/50 shadow-inner flex items-center justify-center" />
+            </div>
 
             {/* Track info */}
             <div className="text-white px-3 py-2 flex-1 overflow-hidden flex flex-col">
-              <div className="flex items-center gap-2 w-full"></div>
-              <SpotifyLogo />
-              <div className="overflow-hidden flex-1 w-full">
-                <div className="overflow-hidden w-full">
-                  <p
-                    className="font-bold whitespace-nowrap w-full text-glow chat-text truncate"
-                    style={{
-                      fontSize: "300%"
-                    }}
-                  >
-                    No track playing
-                  </p>
-                </div>
-                <div className="overflow-hidden mt-1 w-full">
-                  <p
-                    className="text-gray-300 whitespace-nowrap w-full truncate"
-                    style={{
-                      fontSize: "150%"
-                    }}
-                  >
-                    Waiting for music...
-                  </p>
+              <div className="flex items-center gap-2 w-full">
+                <SpotifyLogo />
+                <div className="overflow-hidden flex-1 w-full">
+                  <div className="overflow-hidden w-full">
+                    <p
+                      className="font-bold whitespace-nowrap w-full text-glow chat-text truncate"
+                      style={{
+                        fontSize: "300%"
+                      }}
+                    >
+                      No track playing
+                    </p>
+                  </div>
+                  <div className="overflow-hidden mt-1 w-full">
+                    <p
+                      className="text-gray-300 whitespace-nowrap w-full truncate"
+                      style={{
+                        fontSize: "150%"
+                      }}
+                    >
+                      Waiting for music...
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Empty progress bar */}
-            <div className="w-full mt-1.5">
-              <div className="relative w-full">
-                <div className="overflow-hidden h-[2vh] text-xs flex rounded bg-red-900/30">
-                  <div className="w-0 shadow-none flex flex-col text-center whitespace-nowrap justify-center"></div>
+              {/* Empty progress bar */}
+              <div className="w-full mt-1.5">
+                <div className="relative w-full">
+                  <div className="overflow-hidden h-[2vh] text-xs flex rounded bg-red-900/30">
+                    <div className="w-0 shadow-none flex flex-col text-center whitespace-nowrap justify-center"></div>
+                  </div>
                 </div>
               </div>
             </div>
