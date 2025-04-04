@@ -116,7 +116,7 @@ const ChatPage: React.FC = () => {
     <div className="h-screen w-screen flex items-end justify-start bg-transparent overflow-hidden">
       <div className="cyber-grid absolute inset-0 pointer-events-none"></div>
       {messages.length > 0 && (
-        <div className="chat-container mb-4 mx-4 p-4 rounded-lg w-[calc(100vw-2rem)] overflow-y-auto max-h-[80vh] scrollbar-thin scrollbar-thumb-red-500/30 scrollbar-track-transparent">
+        <div className="chat-container mb-4 mx-4 p-4 rounded-lg w-[calc(100vw-2rem)]">
           {messages.map((message, index) => (
             <div 
               key={message.messageId || index} 
