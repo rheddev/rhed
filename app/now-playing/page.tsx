@@ -84,16 +84,50 @@ export default function Home() {
   // Nothing playing
   if (!currentlyPlaying?.item) {
     return (
-      <div className="p-3">
-        <div className="cyber-glass border border-red-500/20 rounded-lg p-3 shadow-neon-red flex items-center gap-3 animate-fadeIn">
+      <div className="p-4 w-screen h-screen flex items-end">
+        <div className="chat-container w-full">
           <div className="cyber-grid absolute inset-0 pointer-events-none rounded-lg opacity-20"></div>
-          <div className="bg-black/30 w-10 h-10 rounded-md flex items-center justify-center">
-            <svg className="w-5 h-5 text-gray-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9M4.582 9a8.001 8.001 0 0114.356 2M6.343 6.343a8 8 0 0111.314 0" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-red-100">No track playing</p>
+          
+          <div className="flex items-center relative z-10">
+            {/* Placeholder for album art */}
+            <div className="relative flex-shrink-0 h-16 w-16 bg-black/40 rounded-l-lg flex items-center justify-center">
+              <svg className="w-8 h-8 text-gray-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.536 8.464a5 5 0 010 7.072M17.95 6.05a8 8 0 010 11.9M4.582 9a8.001 8.001 0 0114.356 2M6.343 6.343a8 8 0 0111.314 0" />
+              </svg>
+              <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-1 shadow-lg border border-black/10">
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Track info */}
+            <div className="text-white px-3 py-2 overflow-hidden flex-1">
+              <div className="flex items-center gap-2">
+                <SpotifyLogo />
+                <div className="w-full overflow-hidden">
+                  <div className="relative w-full h-5 overflow-hidden">
+                    <p className="text-sm font-bold whitespace-nowrap absolute text-glow chat-text">
+                      No track playing
+                    </p>
+                  </div>
+                  <div className="relative w-full h-4 overflow-hidden">
+                    <p className="text-xs text-gray-300 whitespace-nowrap absolute">
+                      Waiting for music...
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Empty progress bar */}
+              <div className="w-full mt-1.5">
+                <div className="relative w-full">
+                  <div className="overflow-hidden h-1 text-xs flex rounded bg-red-900/30">
+                    <div className="w-0 shadow-none flex flex-col text-center whitespace-nowrap justify-center"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
