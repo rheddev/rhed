@@ -566,3 +566,7 @@ body {
   box-shadow: 0 0 30px rgba(170, 0, 0, 0.45), 
               0 0 60px rgba(170, 0, 0, 0.35);
 }
+
+.widget {
+  padding: 1rem;
+}

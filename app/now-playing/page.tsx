@@ -84,7 +84,7 @@ export default function Home() {
   // Nothing playing
   if (!currentlyPlaying?.item) {
     return (
-      <div className="w-screen h-screen p-4">
+      <div className="w-screen h-screen widget">
         <div className="chat-container w-full h-full">
           <div className="cyber-grid absolute inset-0 pointer-events-none rounded-lg opacity-20"></div>
 

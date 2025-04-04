@@ -113,10 +113,10 @@ const ChatPage: React.FC = () => {
   }
 
   return (
-    <div className="h-screen w-screen flex items-end justify-start bg-transparent overflow-hidden">
+    <div className="h-screen w-screen flex items-end justify-start bg-transparent overflow-hidden widget">
       <div className="cyber-grid absolute inset-0 pointer-events-none"></div>
       {messages.length > 0 && (
-        <div className="chat-container mb-4 mx-4 p-4 rounded-lg w-[calc(100vw-2rem)]">
+        <div className="chat-container p-4 rounded-lg w-full">
           {messages.map((message, index) => (
             <div 
               key={message.messageId || index} 
