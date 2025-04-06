@@ -45,90 +45,106 @@ function AppSidebar({ widgets }: AppSidebarProps) {
   const { setTheme } = useTheme();
 
   return (
-    <Sidebar className="red-glass border-r border-red-500/20 z-50 mobile-sidebar">
-      <SidebarHeader className="p-5">
-        <Link className="text-5xl text-center block" href="/">
+    <Sidebar className="border-r border-red-500/20 z-50 mobile-sidebar">
+      <SidebarHeader className="py-6 px-6">
+        <Link
+          className="text-4xl text-center block transition-transform hover:scale-105 duration-300"
+          href="/"
+        >
           &lt;
-          <span className="font-playwrite font-black text-gradient-primary text-glow">
+          <span className="font-black font-playwrite text-primary-800 text-glow">
             Rhed
           </span>{" "}
           /&gt;
         </Link>
       </SidebarHeader>
-      <SidebarContent>
+
+      <SidebarContent className="px-4 space-y-6">
         <SidebarGroup>
-          <SidebarMenu className="space-y-6">
-            <Collapsible className="group/collapsible">
+          <SidebarMenu className="space-y-4">
+            {/* Widgets Dropdown */}
+            <Collapsible className="group/collapsible red-glass rounded-lg overflow-hidden shadow-red">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton className="text-2xl flex justify-between hover:text-red-300 transition-colors">
-                    <span>Widgets</span>
-                    <ChevronDown className="transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                  <SidebarMenuButton className="text-lg w-full hover:bg-red-500/10 transition-all duration-300 py-3 px-4 flex items-center justify-between">
+                    <span className="font-medium flex items-center">Widgets</span>
+                    <ChevronDown className="transition-transform duration-300 h-4 w-4 group-data-[state=open]/collapsible:rotate-180" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="sidebar-dropdown-animation">
-                  <SidebarMenuSub className="text-2xl space-y-5 py-4 pl-2">
-                    {widgets.map((widget) => {
-                      return (
-                        <SidebarMenuSubItem
-                          key={widget.href}
-                          className="hover:text-red-300 transition-colors"
+                  <SidebarMenuSub className="space-y-2">
+                    {widgets.map((widget) => (
+                      <SidebarMenuSubItem
+                        key={widget.href}
+                        className="rounded-md hover:bg-red-500/10"
+                      >
+                        <Link
+                          href={widget.href}
+                          className="block p-1 text-base hover:text-red-300 transition-colors"
                         >
-                          <Link href={widget.href}>{widget.name}</Link>
-                        </SidebarMenuSubItem>
-                      );
-                    })}
+                          {widget.name}
+                        </Link>
+                      </SidebarMenuSubItem>
+                    ))}
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
             </Collapsible>
-            <SidebarMenuItem>
+
+            {/* GitHub Link */}
+            <SidebarMenuItem className="red-glass rounded-lg overflow-hidden shadow-red">
               <SidebarMenuButton
-                className="text-2xl hover:text-red-300 transition-colors"
+                className="text-lg w-full py-3 px-4 hover:bg-red-500/10 transition-all duration-300 flex items-center justify-between"
                 asChild
               >
                 <Link
                   href="https://github.com/rhamzthev/rhed"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 font-medium"
                 >
-                  GitHub <ExternalLink className="h-5 w-5" />
+                  GitHub <ExternalLink className="h-4 w-4" />
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <Collapsible className="group/collapsible">
+
+            {/* Theme Toggle */}
+            <Collapsible className="group/collapsible red-glass rounded-lg overflow-hidden shadow-red">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    className="hover:scale-105 flex items-center justify-center"
-                    variant="outline"
-                    size="default"
-                  >
-                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span className="sr-only">Toggle theme</span>
+                  <SidebarMenuButton className="text-lg w-full hover:bg-red-500/10 transition-all duration-300 py-3 px-4 flex items-center justify-between">
+                    <span className="font-medium flex items-center">Theme</span>
+                    <div className="flex items-center justify-center relative">
+                      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    </div>
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="sidebar-dropdown-animation">
-                  <SidebarMenuSub className="text-2xl space-y-5 py-4 pl-2">
+                  <SidebarMenuSub className="space-y-2">
                     <SidebarMenuSubItem
                       onClick={() => setTheme("light")}
-                      className="hover:text-red-300 transition-colors"
+                      className="rounded-md hover:bg-red-500/10"
                     >
-                      Light
+                      <span className="block p-1 text-base hover:text-red-300 transition-colors cursor-pointer">
+                        Light
+                      </span>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem
                       onClick={() => setTheme("dark")}
-                      className="hover:text-red-300 transition-colors"
+                      className="rounded-md hover:bg-red-500/10"
                     >
-                      Dark
+                      <span className="block p-1 text-base hover:text-red-300 transition-colors cursor-pointer">
+                        Dark
+                      </span>
                     </SidebarMenuSubItem>
                     <SidebarMenuSubItem
                       onClick={() => setTheme("system")}
-                      className="hover:text-red-300 transition-colors"
+                      className="rounded-md hover:bg-red-500/10"
                     >
-                      System
+                      <span className="block p-1 text-base hover:text-red-300 transition-colors cursor-pointer">
+                        System
+                      </span>
                     </SidebarMenuSubItem>
                   </SidebarMenuSub>
                 </CollapsibleContent>
@@ -137,8 +153,9 @@ function AppSidebar({ widgets }: AppSidebarProps) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="py-4">
-        <p className="text-center text-base">&copy; 2025 Rhamsez Thevenin</p>
+
+      <SidebarFooter className="mt-auto py-6 px-6">
+          <p className="text-center text-sm text-glow">&copy; 2025 Rhamsez Thevenin</p>
       </SidebarFooter>
     </Sidebar>
   );
@@ -150,7 +167,8 @@ function SidebarTrigger() {
   return (
     <Button
       onClick={toggleSidebar}
-      className="fixed left-4 top-4 z-50 md:hidden rhed-button h-10 w-10 p-2 flex items-center justify-center shadow-red"
+      className="fixed left-4 top-4 z-50 md:hidden red-glass border border-red-500/30 h-10 w-10 p-2 flex items-center justify-center shadow-red rounded-lg hover:scale-105 transition-all duration-300"
+      aria-label="Toggle menu"
     >
       <Menu className="h-5 w-5" />
     </Button>
@@ -170,7 +188,7 @@ function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="red-glass navbar-dropdown-animation"
+        className="dropdown navbar-dropdown-animation"
         align="center"
       >
         <DropdownMenuItem
@@ -256,7 +274,7 @@ export default function Home() {
                   </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent className="red-glass navbar-dropdown-animation w-32">
+                <DropdownMenuContent className="navbar-dropdown-animation w-32 dropdown">
                   {widgets.map((widget) => (
                     <DropdownMenuItem
                       className="hover:text-red-300 transition-colors py-2.5 px-4"

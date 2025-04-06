@@ -266,14 +266,14 @@ body {
 }
 
 [data-sidebar="sidebar"][data-mobile="true"] > div {
-  background-color: rgba(255, 191, 191, 0.9); /* Light mode with transparency */
+  background-color: rgba(255, 207, 207, 0.9); /* Light mode with transparency */
   backdrop-filter: blur(8px);
   border-right: 1px solid rgba(170, 0, 0, 0.2);
   box-shadow: -5px 0 25px rgba(170, 0, 0, 0.15);
 }
 
 .dark [data-sidebar="sidebar"][data-mobile="true"] > div {
-  background-color: rgba(63, 0, 0, 0.9); /* Dark mode with transparency */
+  background-color: rgba(31, 0, 0, 0.9); /* Dark mode with transparency */
   backdrop-filter: blur(8px);
   border-right: 1px solid rgba(170, 0, 0, 0.3);
   box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
@@ -569,4 +569,12 @@ body {
 
 .widget {
   padding: 1rem;
+}
+
+.dropdown {
+ @apply bg-[rgba(255,207,207,1)] border-[rgba(255,255,255,0.1)]
+}
+
+.dark .dropdown {
+  @apply bg-[rgba(31,0,0,1)] border-[rgba(255,255,255,0.1)]
 }
