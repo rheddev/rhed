@@ -91,7 +91,7 @@ export default function Home() {
           <div className="flex h-full items-center relative z-10">
             {/* Album art placeholder that matches the main widget */}
             <div className="relative aspect-square h-full">
-              <div className="h-full aspect-square rounded-l-lg bg-gray-800/50 shadow-inner flex items-center justify-center" />
+              <div className="h-full aspect-square album-cover bg-gray-800/50 shadow-inner flex items-center justify-center" />
             </div>
 
             {/* Track info */}
