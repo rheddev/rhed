@@ -153,7 +153,7 @@ export default function Home() {
             <img
               src={item.album.images[0].url}
               alt="Album cover"
-              className="h-full aspect-square rounded-l-lg object-cover shadow-inner transition-all duration-500"
+              className="h-full aspect-square album-cover object-cover shadow-inner transition-all duration-500"
               style={{ filter: !is_playing ? 'brightness(0.8)' : 'brightness(1)' }}
             />
           </div>

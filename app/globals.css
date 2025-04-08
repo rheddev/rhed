@@ -571,6 +571,11 @@ body {
   padding: 1rem;
 }
 
+.album-cover {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
 .dropdown {
  @apply bg-[rgba(255,207,207,1)] border-[rgba(255,255,255,0.1)]
 }
