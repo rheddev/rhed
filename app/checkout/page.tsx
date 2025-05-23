@@ -7,6 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import React, { Suspense, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
+
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
@@ -37,7 +38,10 @@ function CheckoutContent() {
         body: JSON.stringify({ name, message, description }),
       })
         .then((res) => res.json())
-        .then((data) => data.clientSecret)
+        .then((data) => {
+          console.log(data);
+          return data.clientSecret;
+        })
         .finally(() => {
           // clear local storage
           localStorage.removeItem("name");
