@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 // TTS Server URL
 const TTS_SERVER_URL = process.env.SERVER_URL || "http://localhost:8080";
 // AUTH_TOKEN =base64(ADMIN_USERNAME:ADMIN_PASSWORD)
-const AUTH_TOKEN = Buffer.from(`${process.env.ADMIN_USERNAME}:${process.env.ADMIN_PASSWORD}`).toString('base64');
+// const AUTH_TOKEN = Buffer.from(`${process.env.ADMIN_USERNAME}:${process.env.ADMIN_PASSWORD}`).toString('base64');
 
 export async function POST(request: Request) {
   try {
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${AUTH_TOKEN}`
+          // "Authorization": `Bearer ${AUTH_TOKEN}`
         },
         body: JSON.stringify({
           session_id,
