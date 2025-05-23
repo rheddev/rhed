@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ interface Metadata {
   message: string;
 }
 
-export default function CheckoutReturnPage() {
+function CheckoutReturnContent() {
   // get session id from search params
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
@@ -51,7 +51,9 @@ export default function CheckoutReturnPage() {
         })
         .catch((error) => {
           console.error("Error fetching session status:", error);
-          setError("Unable to retrieve payment information. Please contact support.");
+          setError(
+            "Unable to retrieve payment information. Please contact support."
+          );
           setIsLoading(false);
         });
     }
@@ -76,22 +78,22 @@ export default function CheckoutReturnPage() {
 
   const updateTTS = async () => {
     try {
-      const response = await fetch('/api/tts', {
-        method: 'POST',
+      const response = await fetch("/api/tts", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           session_id: sessionId,
           name: metadata?.name,
           amount: amount / 100,
-          message: metadata?.message
+          message: metadata?.message,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('TTS update failed:', errorData.error);
+        console.error("TTS update failed:", errorData.error);
         // We don't need to show this error to the user as it's a background process
       }
 
@@ -101,7 +103,7 @@ export default function CheckoutReturnPage() {
       console.error("Error updating TTS:", error);
       // Continue with the payment success flow even if TTS fails
     }
-  }
+  };
 
   /**
    * complete: The checkout session is complete. Payment processing may still be in progress
@@ -119,7 +121,9 @@ export default function CheckoutReturnPage() {
     return (
       <div className="bg-wood flex min-h-screen flex-col items-center justify-center p-4">
         <div className="w-full max-w-md rounded-lg red-glass p-8 shadow-red">
-          <h2 className="mb-4 text-center text-xl font-semibold text-glow">Processing your payment...</h2>
+          <h2 className="mb-4 text-center text-xl font-semibold text-glow">
+            Processing your payment...
+          </h2>
           <div className="flex justify-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-300 border-t-red-600"></div>
           </div>
@@ -167,23 +171,24 @@ export default function CheckoutReturnPage() {
   }
 
   if (sessionStatus === "open") {
-    
     const href = `/checkout?session_id=${sessionId}`;
 
     return (
-      <div className="bg-wood flex min-h-screen flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-lg red-glass p-8 shadow-red">
-          <h2 className="mb-4 text-center text-xl font-semibold text-glow">Your checkout session is still open</h2>
-          <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
-            Please complete your payment to continue.
-          </p>
-          <div className="flex justify-center">
-            <Button asChild className="rhed-button">
-              <Link href={href}>Return to Checkout</Link>
-            </Button>
+        <div className="bg-wood flex min-h-screen flex-col items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-lg red-glass p-8 shadow-red">
+            <h2 className="mb-4 text-center text-xl font-semibold text-glow">
+              Your checkout session is still open
+            </h2>
+            <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
+              Please complete your payment to continue.
+            </p>
+            <div className="flex justify-center">
+              <Button asChild className="rhed-button">
+                <Link href={href}>Return to Checkout</Link>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
     );
   } else if (sessionStatus === "complete") {
     if (paymentStatus === "unpaid") {
@@ -212,8 +217,10 @@ export default function CheckoutReturnPage() {
               Payment Processing
             </h2>
             <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
-              Your payment is being processed. We&apos;ll send you a confirmation email once completed.
-              {customerEmail && ` A notification has been sent to ${customerEmail}.`}
+              Your payment is being processed. We&apos;ll send you a
+              confirmation email once completed.
+              {customerEmail &&
+                ` A notification has been sent to ${customerEmail}.`}
             </p>
             <div className="flex justify-center">
               <Button asChild className="rhed-button">
@@ -249,8 +256,10 @@ export default function CheckoutReturnPage() {
               Setup Complete!
             </h2>
             <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
-              Your setup has been completed successfully. No payment was required at this time.
-              {customerEmail && ` A confirmation email has been sent to ${customerEmail}.`}
+              Your setup has been completed successfully. No payment was
+              required at this time.
+              {customerEmail &&
+                ` A confirmation email has been sent to ${customerEmail}.`}
             </p>
             <div className="flex justify-center">
               <Button asChild className="rhed-button">
@@ -286,7 +295,9 @@ export default function CheckoutReturnPage() {
               Payment Successful!
             </h2>
             <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
-              Thank you for your support. {customerEmail && `A confirmation email has been sent to ${customerEmail}.`}
+              Thank you for your support.{" "}
+              {customerEmail &&
+                `A confirmation email has been sent to ${customerEmail}.`}
             </p>
             <div className="flex flex-col gap-3">
               <Button asChild className="rhed-button">
@@ -339,9 +350,12 @@ export default function CheckoutReturnPage() {
   return (
     <div className="bg-wood flex min-h-screen flex-col items-center justify-center p-4">
       <div className="w-full max-w-md rounded-lg red-glass p-8 shadow-red">
-        <h2 className="mb-4 text-center text-xl font-semibold text-glow">Checkout Status</h2>
+        <h2 className="mb-4 text-center text-xl font-semibold text-glow">
+          Checkout Status
+        </h2>
         <p className="mb-6 text-center text-gray-600 dark:text-gray-300">
-          We couldn&apos;t determine the status of your checkout session. Please contact support if you need assistance.
+          We couldn&apos;t determine the status of your checkout session. Please
+          contact support if you need assistance.
         </p>
         <div className="flex justify-center">
           <Button asChild className="rhed-button">
@@ -350,5 +364,13 @@ export default function CheckoutReturnPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutReturnPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutReturnContent />
+    </Suspense>
   );
 }

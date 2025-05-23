@@ -5,17 +5,16 @@ import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
-import React, { useCallback } from "react";
+import React, { Suspense, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const params = useSearchParams();
-
   const sessionId = params.get("session_id");
-
+  
   const name = localStorage.getItem("name");
   const message = localStorage.getItem("message");
 
@@ -73,5 +72,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
