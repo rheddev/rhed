@@ -1,154 +1,154 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useEffect, useState, useCallback } from "react";
 
-export default function TTSPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    amount: "",
-    message: ""
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+interface Message {
+  name: string;
+  amount: number;
+  message: string;
+  description: string;
+  audio?: string;
+}
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-    // Reset success state when user starts typing
-    if (success) setSuccess(false);
-    if (error) setError(null);
-  };
+export default function TTSListenPage() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<Message | undefined>();
+  const [isVisible, setIsVisible] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  // These are in milliseconds
+  const TRANSITION_DURATION = 500;
 
-    try {
-      const response = await fetch('/api/tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          amount: parseFloat(formData.amount),
-          message: formData.message
-        }),
-      });
+  // These are in seconds
+  const HIDE_DURATION = 5;
+  const SHOW_DURATION = 10;
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send message');
+  const connectWebSocket = () => {
+
+    const ws = new WebSocket("wss://tts.rhamzthev.com/ws/listen");
+
+    ws.onopen = () => {
+      console.log("WebSocket Connected");
+      setIsConnected(true);
+    };
+
+    ws.onmessage = async (event) => {
+      try {
+        console.log("Received message:", event.data);
+        const message: Message = JSON.parse(event.data);
+        // [name] donated [amount]. [message]
+        const fullMessage = `${message.name} donated $${message.amount.toFixed(2)}. ${message.message}`;
+        const audio = await fetch("/api/tts/audio", {
+          method: "POST",
+          body: JSON.stringify({ message: fullMessage, description: message.description }),
+        });
+        const audioData = await audio.json();
+        message.audio = audioData.audio;
+        console.log("Received message:", message);
+        setMessages((prevMessages) => [...prevMessages, message]);
+      } catch (err) {
+        console.error("Error parsing WebSocket message:", err);
       }
+    };
 
-      const data = await response.json();
-      console.log(data);
-      // Reset form on success
-      setFormData({ name: "", amount: "", message: "" });
-      setSuccess(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      setSuccess(false);
-    } finally {
-      setIsLoading(false);
-    }
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      setIsConnected(false);
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket Disconnected");
+      setIsConnected(false);
+    };
   };
+
+  const pollMessage = useCallback(async () => {
+    if (messages.length === 0) return;
+    const [nextMessage, ...remainingMessages] = messages;
+    setMessages(remainingMessages);
+    setMessage(nextMessage);
+    // Play audio from base64 audio string
+    const audio = new Audio(`data:audio/wav;base64,${nextMessage.audio}`);
+    await audio.play();
+  }, [messages]);
+
+  const removeMessage = useCallback(() => {
+    setMessage(undefined);
+  }, []);
+
+  // SHOW MESSAGE
+  const processNextInQueue = useCallback(async () => {
+    if (messages.length === 0) return;
+
+    await pollMessage();
+    setIsVisible(true);
+
+    const hideTimer = setTimeout(() => {
+      setIsVisible(false);
+
+      setTimeout(() => {
+        removeMessage();
+      }, TRANSITION_DURATION);
+    }, SHOW_DURATION * 1000);
+
+    return () => clearTimeout(hideTimer);
+  }, [pollMessage, messages.length, removeMessage]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (messages.length > 0 && !message) {
+      timer = setTimeout(processNextInQueue, HIDE_DURATION * 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [message, processNextInQueue, messages.length]);
 
   return (
-    <div className="bg-wood flex flex-col items-center justify-center min-h-screen p-8">
-      <div className="w-full max-w-md space-y-6">
-        <h1 className="text-3xl font-bold text-center text-glow mb-8">Text-to-Speech</h1>
-        
-        <form onSubmit={handleSubmit} className="red-glass p-6 rounded-lg space-y-4 shadow-red">
-          <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-medium text-glow">
-              Your Name
-            </label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="Enter your name"
-              className="bg-black/20 border-red-500/20 focus:border-red-500/40"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
+    <div className="fixed inset-0 pointer-events-none flex items-center justify-center z-50 widget">
+      <div className="cyber-grid absolute inset-0 pointer-events-none"></div>
 
-          <div className="space-y-2">
-            <label htmlFor="amount" className="text-sm font-medium text-glow">
-              Amount (USD)
-            </label>
-            <Input
-              id="amount"
-              type="number"
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-              className="bg-black/20 border-red-500/20 focus:border-red-500/40"
-              value={formData.amount}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="message" className="text-sm font-medium text-glow">
-              Message
-            </label>
-            <Textarea
-              id="message"
-              placeholder="Enter your message to be read"
-              className="bg-black/20 border-red-500/20 focus:border-red-500/40 min-h-[100px]"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
-
-          {isLoading && (
-            <div className="flex items-center justify-center space-x-2 text-glow">
-              <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-              <span>Processing your message...</span>
-            </div>
-          )}
-
-          {error && (
-            <div className="text-red-500 text-sm text-center p-2 bg-red-500/10 rounded">
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="text-green-500 text-sm text-center p-2 bg-green-500/10 rounded">
-              Message sent successfully!
-            </div>
-          )}
-
-          <Button
-            type="submit"
-            className="w-full rhed-button mt-4 hover:scale-105 transition-all duration-300"
-            disabled={isLoading}
+      <div className="absolute top-5 right-5 z-[1001] pointer-events-auto">
+        {!isConnected && (
+          <button
+            onClick={connectWebSocket}
+            className="rhed-button px-4 py-2 rounded text-sm font-medium flex items-center space-x-1"
           >
-            {isLoading ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>Sending...</span>
+            <span className="w-2 h-2 rounded-full bg-red-500/50 animate-pulse mr-2"></span>
+            Connect TTS
+          </button>
+        )}
+      </div>
+
+      <div className="w-full max-w-[500px] absolute" style={{ top: '50%', transform: 'translateY(-20%)' }}>
+        {message && (
+          <div 
+            className={`chat-container px-5 py-4 mx-auto relative overflow-hidden transition-all duration-500 ease-in-out message-animation
+              ${isVisible 
+                ? "opacity-100 translate-y-0" 
+                : "opacity-0 translate-y-5"
+              }`}
+          >            
+            {/* Content */}
+            <div className="relative z-10">
+              <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-1 h-5 bg-red-500"></div>
+                  <span className="font-mono text-red-500 text-lg font-semibold tracking-wide uppercase text-glow">
+                    {message.name}
+                  </span>
+                </div>
+                <div className="cyber-glass bg-red-500/10 border border-red-500/30 px-2 py-1 rounded-sm shadow-neon-red">
+                  <span className="font-mono text-red-500 text-sm tracking-wider">
+                    ${message.amount.toFixed(2)}
+                  </span>
+                </div>
               </div>
-            ) : "Send Message"}
-          </Button>
-        </form>
+              
+              <div className="text-white/90 text-lg leading-relaxed font-light pl-3 border-l-[1px] border-red-500/30 chat-text">
+                {message.message}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -49,7 +49,7 @@
     --sidebar-border: 0 20% 15%;
     --sidebar-ring: 0 70% 50%;
 
-    --rhed-background: #3f0000;
+    --rhed-background: #1f0000;
     --rhed-foreground: #ffefef;
     --rhed-accent: #cc4433;
     --fade: #300;
@@ -119,6 +119,68 @@
   }
 }
 
+/* TTS animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    box-shadow: 0 0 3px rgba(170, 0, 0, 0.2);
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 8px rgba(170, 0, 0, 0.3);
+  }
+  100% {
+    opacity: 0.5;
+    box-shadow: 0 0 3px rgba(170, 0, 0, 0.2);
+  }
+}
+
+@keyframes pulse-subtle {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+}
+
 /* New minimalist message animation */
 .message-animation {
   animation: fadeIn 0.3s ease-out forwards;
@@ -137,6 +199,10 @@
 }
 
 /* Custom utility classes */
+.App-Background {
+  background-color: transparent !important;
+}
+
 .bg-wood {
   @apply bg-repeat bg-center bg-contain;
   background-image: url('/wood_light.jpg');
