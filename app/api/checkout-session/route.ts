@@ -24,22 +24,30 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Name, message, and description are required" }, { status: 400 });
     }
 
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-        {
-            price: "price_1RRnHUIkeiRvemAOR3RownEp",
-            quantity: 1
-        }
-    ],
-    metadata: {
-        name,
-        message,
-        description
-    },
-    mode: "payment",
-    return_url: `${baseUrl}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
-    ui_mode: "embedded",
-  });
+  try {
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+          {
+              price: "price_1RRnHUIkeiRvemAOR3RownEp",
+              quantity: 1
+          }
+      ],
+      metadata: {
+          name,
+          message,
+          description
+      },
+      mode: "payment",
+      return_url: `${baseUrl}/checkout/return?session_id={CHECKOUT_SESSION_ID}`,
+      ui_mode: "embedded",
+    });
 
-  return NextResponse.json({clientSecret: session.client_secret});
+    return NextResponse.json({clientSecret: session.client_secret});
+  } catch (error) {
+    console.error('Stripe checkout session creation failed:', error);
+    return NextResponse.json({ 
+      error: 'Failed to create checkout session', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    }, { status: 500 });
+  }
 }
