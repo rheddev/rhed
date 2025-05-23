@@ -40,6 +40,17 @@ export default {
         "pulse-glow": "pulse-glow 3s infinite ease-in-out",
         "float": "float 6s infinite ease-in-out",
         "gradient-shift": "gradient-shift 15s ease infinite",
+        "fadeIn": "fadeIn 0.5s ease-out forwards",
+        "fadeOut": "fadeOut 0.5s ease-in forwards",
+        "scanline": "scanline 3s linear infinite",
+        "pulse": "pulse 2s infinite",
+        "pulse-subtle": "pulse-subtle 3s infinite ease-in-out",
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
       },
       backgroundImage: {
         "wood-light": "url('/wood_light.jpg')",
@@ -47,6 +58,9 @@ export default {
       },
       boxShadow: {
         'glow': '0 0 15px rgba(170, 0, 0, 0.5)',
+      },
+      transitionProperty: {
+        'transform-opacity': 'transform, opacity',
       },
     },
     plugins: [animatePlugin],
