@@ -514,6 +514,27 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            <div className="max-w-7xl mx-auto border-t border-red-500/10 mt-6 pt-6 sm:mt-8 sm:pt-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">About Rhed</h3>
+                  <p className="text-base mb-2">
+                    Rhed is a content creation and streaming business operated by Rhamsez Thevenin.
+                  </p>
+                  <p className="text-base">
+                    Based in the United States, established 2024.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">Services Offered</h3>
+                  <ul className="space-y-2">
+                    <li>• Live coding and development streams</li>
+                    <li>• Custom streaming widgets and tools</li>
+                    <li>• Text to Speech (TTS) services</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
             <div className="text-center mt-6 pt-4 sm:mt-8 sm:pt-6 border-t border-red-500/10">
               <p className="text-base sm:text-lg">
                 &copy; 2025 Rhamsez Thevenin
