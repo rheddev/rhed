@@ -66,7 +66,7 @@ export default function DonatePage() {
 
       // In a real application, you might want to make an API call here
       // before redirecting to checkout
-      // put name and message in local storage
+      // put name and message in local storage.
       localStorage.setItem("name", formData.name);
       localStorage.setItem("message", formData.message);
 
