@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 
 // Define character limits
-const NAME_CHAR_LIMIT = 10;
+const NAME_CHAR_LIMIT = 25;
 const MESSAGE_CHAR_LIMIT = 100;
 
 export default function DonatePage() {
