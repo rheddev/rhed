@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { Filter } from 'bad-words'
+
+const filter = new Filter();
 
 interface Message {
   name: string;
@@ -37,6 +40,7 @@ export default function TTSListenPage() {
         console.log("Received message:", event.data);
         const message: Message = JSON.parse(event.data);
         // [name] donated [amount]. [message]
+        message.message = filter.clean(message.message);
         const fullMessage = `${message.name} donated $${message.amount.toFixed(2)}. ${message.message}`;
         const audio = await fetch("/api/tts/audio", {
           method: "POST",
