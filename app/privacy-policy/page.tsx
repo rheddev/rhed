@@ -9,9 +9,9 @@ import { Footer } from "@/components/layout/Footer";
 
 export default function PrivacyPolicyPage() {
   const widgets = [
-    { href: "/chat", name: "Chat" },
-    { href: "/events", name: "Events (v2)" },
-    { href: "/now-playing", name: "Now Playing" },
+    { href: "/v2/chat", name: "Chat (v2)" },
+    { href: "/v2/events", name: "Events (REAL v2)" },
+    { href: "/v2/now-playing", name: "Now Playing (v2)" },
     { href: "/outrun", name: "Outrun" },
     { href: "/pomodoro", name: "24/7 Pomodoro" },
     { href: "/tts", name: "Text to Speech" },

@@ -12,6 +12,8 @@ export function useTwitch() {
   const [eventSocket, setEventSocket] = useState<WebSocket | null>(null);
 
   const [videos, setVideos] = useState([]);
+  const [globalBadges, setGlobalBadges] = useState<TwitchBadgeSet[]>([]);
+  const [channelBadges, setChannelBadges] = useState<TwitchBadgeSet[]>([]);
 
   const fetchVideos = useCallback(async () => {
     try {
@@ -57,6 +59,68 @@ export function useTwitch() {
     window.location.href = "/api/twitch/authorize";
   }, []);
 
+  const getGlobalChatBadges = useCallback(async () => {
+    try {
+      const tokenResponse = await fetch("/api/twitch/token");
+      const { access_token } = await tokenResponse.json();
+
+      if (!access_token) {
+        setError("Failed to get access token");
+        return [];
+      }
+
+      const response = await fetch("https://api.twitch.tv/helix/chat/badges/global", {
+        headers: {
+          "Authorization": `Bearer ${access_token}`,
+          "Client-Id": process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch global chat badges");
+      }
+
+      const data = await response.json();
+      setGlobalBadges(data.data);
+      return data.data;
+    } catch (error) {
+      console.error("Error fetching global chat badges:", error);
+      return [];
+    }
+  }, []);
+
+  const getChannelChatBadges = useCallback(async (broadcasterId: string) => {
+    if (!broadcasterId) return [];
+    
+    try {
+      const tokenResponse = await fetch("/api/twitch/token");
+      const { access_token } = await tokenResponse.json();
+
+      if (!access_token) {
+        setError("Failed to get access token");
+        return [];
+      }
+
+      const response = await fetch(`https://api.twitch.tv/helix/chat/badges?broadcaster_id=${broadcasterId}`, {
+        headers: {
+          "Authorization": `Bearer ${access_token}`,
+          "Client-Id": process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch channel chat badges");
+      }
+
+      const data = await response.json();
+      setChannelBadges(data.data);
+      return data.data;
+    } catch (error) {
+      console.error("Error fetching channel chat badges:", error);
+      return [];
+    }
+  }, []);
+
   // CHAT
   const startChatConnection = useCallback(async () => {
     if (!isAuthenticated || chatSocket) return;
@@ -70,6 +134,57 @@ export function useTwitch() {
         return;
       }
 
+      // Fetch badges first
+      let gBadges: TwitchBadgeSet[] = [];
+      let cBadges: TwitchBadgeSet[] = [];
+      
+      try {
+        gBadges = await getGlobalChatBadges();
+        console.log("Retrieved global badges:", gBadges);
+      } catch (error) {
+        console.error("Error fetching global badges:", error);
+      }
+      
+      if (user) {
+        try {
+          cBadges = await getChannelChatBadges(user.id);
+          console.log("Retrieved channel badges:", cBadges);
+        } catch (error) {
+          console.error("Error fetching channel badges:", error);
+        }
+      }
+
+      // Hardcoded fallback for critical badges if API fails
+      const ensureBadgeExists = (badgeId: string, badgeSet: TwitchBadgeSet[]) => {
+        if (!badgeSet.some(set => set.set_id === badgeId)) {
+          console.log(`Adding fallback for missing badge: ${badgeId}`);
+          
+          // Add a minimal badge set
+          const fallbackSet: TwitchBadgeSet = {
+            set_id: badgeId,
+            versions: [
+              {
+                id: "1",
+                image_url_1x: `https://static-cdn.jtvnw.net/badges/v1/${badgeId}/1`,
+                image_url_2x: `https://static-cdn.jtvnw.net/badges/v1/${badgeId}/2`,
+                image_url_4x: `https://static-cdn.jtvnw.net/badges/v1/${badgeId}/3`,
+                title: badgeId.charAt(0).toUpperCase() + badgeId.slice(1),
+                description: "",
+                click_action: null,
+                click_url: null
+              }
+            ]
+          };
+          
+          badgeSet.push(fallbackSet);
+        }
+      };
+      
+      // Ensure critical badges exist
+      ensureBadgeExists("broadcaster", gBadges);
+      ensureBadgeExists("moderator", gBadges);
+      ensureBadgeExists("subscriber", gBadges);
+      
       const newSocket = new WebSocket("wss://irc-ws.chat.twitch.tv:443");
 
       newSocket.onopen = () => {
@@ -97,6 +212,7 @@ export function useTwitch() {
         }
 
         try {
+          console.log(message)
           // Parse tags
           const tagsPart = message.split(' :')[0];
           if (!tagsPart.startsWith('@')) return;
@@ -118,11 +234,91 @@ export function useTwitch() {
           
           // Process badges
           const badges: string[] = tags.badges ? tags.badges.split(',') : [];
-          const isBroadcaster = badges.some(badge => badge.startsWith('broadcaster'));
+          
+          // More robust broadcaster detection
+          const isBroadcaster = badges.some(badge => badge.startsWith('broadcaster')) || 
+                               (user && tags['user-id'] === user.id) || 
+                               (user && tags['room-id'] === user.id);
+          
+          console.log('Is broadcaster check:', {
+            badgeCheck: badges.some(badge => badge.startsWith('broadcaster')),
+            userIdMatch: user && tags['user-id'] === user.id,
+            roomIdMatch: user && tags['room-id'] === user.id,
+            result: isBroadcaster
+          });
+          
           const isMod = tags.mod === '1' || badges.some(badge => badge.startsWith('moderator'));
           const isSubscriber = tags.subscriber === '1' || badges.some(badge => badge.startsWith('subscriber'));
           const isTurbo = tags.turbo === '1';
           const isFirstMsg = tags['first-msg'] === '1';
+          
+          // Process badges to get images
+          const badgeInfo: TwitchBadgeInfo[] = [];
+          
+          console.log('Processing badges:', badges);
+          console.log('Channel badges sets:', cBadges);
+          console.log('Global badges sets:', gBadges);
+          
+          // If user is broadcaster but no broadcaster badge is found, add it manually
+          if (isBroadcaster && !badges.some(badge => badge.startsWith('broadcaster/'))) {
+            console.log('Adding missing broadcaster badge');
+            badges.push('broadcaster/1');
+          }
+          
+          if (badges.length > 0) {
+            badges.forEach(badge => {
+              const [badgeId, badgeVersion] = badge.split('/');
+              console.log(`Processing badge: ${badgeId}/${badgeVersion}`);
+              
+              // First check channel badges
+              let badgeFound = false;
+              const channelBadgeSet = cBadges.find((set: TwitchBadgeSet) => set.set_id === badgeId);
+              
+              if (channelBadgeSet) {
+                console.log(`Found channel badge set for ${badgeId}`, channelBadgeSet);
+                
+                const versionObj = channelBadgeSet.versions.find(v => v.id === badgeVersion);
+                if (versionObj) {
+                  console.log(`Found channel badge version ${badgeVersion}`, versionObj);
+                  
+                  badgeInfo.push({
+                    id: badgeId,
+                    version: badgeVersion,
+                    imageUrl: versionObj.image_url_4x,
+                    title: versionObj.title
+                  });
+                  badgeFound = true;
+                }
+              }
+              
+              // If not found in channel badges, check global badges
+              if (!badgeFound) {
+                const globalBadgeSet = gBadges.find((set: TwitchBadgeSet) => set.set_id === badgeId);
+                
+                if (globalBadgeSet) {
+                  console.log(`Found global badge set for ${badgeId}`, globalBadgeSet);
+                  
+                  const versionObj = globalBadgeSet.versions.find(v => v.id === badgeVersion);
+                  if (versionObj) {
+                    console.log(`Found global badge version ${badgeVersion}`, versionObj);
+                    
+                    badgeInfo.push({
+                      id: badgeId,
+                      version: badgeVersion,
+                      imageUrl: versionObj.image_url_4x,
+                      title: versionObj.title
+                    });
+                  } else {
+                    console.log(`Version ${badgeVersion} not found in global badge set ${badgeId}`, globalBadgeSet.versions);
+                  }
+                } else {
+                  console.log(`Global badge set not found for ${badgeId}`);
+                }
+              }
+            });
+          }
+          
+          console.log('Final badgeInfo:', badgeInfo);
           
           // Process emotes
           const emotes: {
@@ -151,11 +347,12 @@ export function useTwitch() {
             displayName: tags['display-name'] || 'Anonymous',
             msg,
             badges,
+            badgeInfo,
             emotes,
             userId: tags['user-id'] || '',
             messageId: tags.id || '',
             isMod,
-            isBroadcaster,
+            isBroadcaster: !!isBroadcaster,
             isSubscriber,
             isTurbo,
             isFirstMsg,
@@ -182,7 +379,7 @@ export function useTwitch() {
       console.error(error);
       setError("Failed to start chat connection");
     }
-  }, [isAuthenticated, chatSocket, user]);
+  }, [isAuthenticated, chatSocket, user, getGlobalChatBadges, getChannelChatBadges]);
 
   const closeChatConnection = useCallback(() => {
     if (chatSocket) {
@@ -197,7 +394,7 @@ export function useTwitch() {
 
     try {
       const newSocket = new WebSocket("wss://eventsub.wss.twitch.tv/ws");
-      // const newSocket = new WebSocket("ws://localhost:8080/ws");
+      // const newSocket = new WebSocket("ws://127.0.0.1:8080/ws");
 
       newSocket.onopen = () => {
         console.log("Connected to Twitch EventSub");
@@ -338,6 +535,14 @@ export function useTwitch() {
     checkAuthStatus();
   }, [checkAuthStatus]);
 
+  // Load badges when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      getGlobalChatBadges();
+      getChannelChatBadges(user.id);
+    }
+  }, [isAuthenticated, user, getGlobalChatBadges, getChannelChatBadges]);
+
   return {
     videos,
     messages,
@@ -346,6 +551,8 @@ export function useTwitch() {
     user,
     event,
     queue,
+    globalBadges,
+    channelBadges,
     fetchVideos,
     checkAuthStatus,
     login,
@@ -355,5 +562,7 @@ export function useTwitch() {
     closeEventsConnection,
     pollEvent,
     removeEvent,
+    getGlobalChatBadges,
+    getChannelChatBadges,
   };
 }

@@ -68,6 +68,7 @@ interface TwitchChatMessage {
   displayName: string;
   msg: string;
   badges: string[];
+  badgeInfo?: TwitchBadgeInfo[];
   emotes: {
     id: string;
     positions: { start: number; end: number }[];
@@ -87,4 +88,28 @@ interface TwitchUser {
   login: string;
   displayName: string;
   profileImageUrl: string;
+}
+
+// Badge-related interfaces
+interface TwitchBadgeVersion {
+  id: string;
+  image_url_1x: string;
+  image_url_2x: string;
+  image_url_4x: string;
+  title: string;
+  description: string;
+  click_action: string | null;
+  click_url: string | null;
+}
+
+interface TwitchBadgeSet {
+  set_id: string;
+  versions: TwitchBadgeVersion[];
+}
+
+interface TwitchBadgeInfo {
+  id: string;
+  version: string;
+  imageUrl: string;
+  title: string;
 }

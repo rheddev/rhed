@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useTwitch } from '@/hooks/use-twitch';
 import EmoteMessage from '@/components/EmoteMessage';
 
+/**
+ * TODO: Add 7TV Support
+ */
 const ChatPage: React.FC = () => {
   const { messages, isAuthenticated, error, login, startChatConnection, closeChatConnection } = useTwitch();
   const [messagePositions, setMessagePositions] = useState<{ [key: number]: number }>({});

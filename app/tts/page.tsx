@@ -71,9 +71,15 @@ export default function TTSListenPage() {
     const [nextMessage, ...remainingMessages] = messages;
     setMessages(remainingMessages);
     setMessage(nextMessage);
+
     // Play audio from base64 audio string
+    const ringAudio = new Audio("/sounds/ring.wav");
+    ringAudio.volume = 0.5;
     const audio = new Audio(`data:audio/wav;base64,${nextMessage.audio}`);
+
+    await ringAudio.play();
     await audio.play();
+
   }, [messages]);
 
   const removeMessage = useCallback(() => {
