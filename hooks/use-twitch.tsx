@@ -236,14 +236,14 @@ export function useTwitch() {
           const badges: string[] = tags.badges ? tags.badges.split(',') : [];
           
           // More robust broadcaster detection
-          const isBroadcaster = badges.some(badge => badge.startsWith('broadcaster')) || 
-                               (user && tags['user-id'] === user.id) || 
-                               (user && tags['room-id'] === user.id);
+          const isBroadcaster = badges.some(badge => badge.startsWith('broadcaster')) && 
+                               (user && tags['user-id'] === user.id) // || 
+                               // (user && tags['room-id'] === user.id);
           
           console.log('Is broadcaster check:', {
             badgeCheck: badges.some(badge => badge.startsWith('broadcaster')),
             userIdMatch: user && tags['user-id'] === user.id,
-            roomIdMatch: user && tags['room-id'] === user.id,
+            // roomIdMatch: user && tags['room-id'] === user.id,
             result: isBroadcaster
           });
           
@@ -340,7 +340,9 @@ export function useTwitch() {
               emotes.push({ id: emoteId, positions });
             });
           }
-          
+         
+          console.log(isBroadcaster);
+
           // Create message object
           const chatMessage: TwitchChatMessage = {
             color: tags.color || '#FFFFFF',
