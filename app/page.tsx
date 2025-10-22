@@ -62,14 +62,14 @@ export default function Home() {
                   Rhamsez Thevenin&apos;s Content Creator Arc
                 </p>
                 <div className="mt-8 flex flex-wrap gap-4">
-                  <Link href="/donate">
+                  {/* <Link href="/donate">
                     <Button
                       className="rhed-button h-11 px-5 py-2.5 text-base sm:text-lg bg-red-600/40 hover:bg-red-600/50 border border-red-400/50 shadow-[0_0_15px_rgba(239,68,68,0.5)] hover:shadow-[0_0_20px_rgba(239,68,68,0.7)] transition-all duration-300 relative animate-pulse-subtle"
                       size="lg"
                     >
                       Donate
                     </Button>
-                  </Link>
+                  </Link> */}
                   {widgets.slice(0, 3).map((widget) => (
                     <Link key={widget.href} href={widget.href}>
                       <Button
